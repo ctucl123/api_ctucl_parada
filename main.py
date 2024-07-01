@@ -15,9 +15,17 @@ def helloworld():
 def datos():
     return rs232.getData()
 
-@app.route("/abrir")
-def abrirDoor():
+@app.route("/tarifa_general")
+def test1():
     return gpioManager.tarifaGeneral()
+
+@app.route("/desactivar_sistema")
+def test2():
+    return gpioManager.desactivarSistema()
+
+@app.route("/silla_ruedas")
+def test3():
+    return gpioManager.sillaRuedas()
 
 
 if __name__ == "__main__":

@@ -27,9 +27,16 @@ class gpiosManager():
         GPIO.output(self.cerradura2, GPIO.HIGH)  # Desactivar la cerradura 2
         GPIO.output(self.semaforo, GPIO.LOW) 
         return "puerta general abierta" 
-    def desactivar_sistema(self):
+    def desactivarSistema(self):
         GPIO.output(self.cerradura1, GPIO.HIGH)
         GPIO.output(self.cerradura2, GPIO.HIGH)
         GPIO.output(self.semaforo, GPIO.HIGH)
         GPIO.output(self.electroiman, GPIO.LOW)
         return "sistema desactivado" 
+    def sillaRuedas(self):
+        GPIO.output(self.electroiman, GPIO.HIGH)
+        GPIO.output(self.semaforo, GPIO.LOW) 
+        GPIO.output(self.actuador, GPIO.HIGH)  
+        time.sleep(1)
+        GPIO.output(self.actuador, GPIO.LOW)
+        return "sistema silla de ruedas" 
