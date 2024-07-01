@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-class gpiosManager(GPIO):
+class gpiosManager():
     def __init__(self):
         super().__init__()
         GPIO.setmode(GPIO.BCM)
