@@ -16,7 +16,7 @@ def datos():
     return rs232.getData()
 
 @app.route("/abrir")
-def datos():
+def abrirDoor():
     return gpioManager.tarifaGeneral()
 
 
