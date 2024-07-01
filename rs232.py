@@ -12,7 +12,7 @@ class rs232Comunication(threading.Thread):
     def run(self):
         print(f"{self.name} empieza la lectura por rs232")
         while not self.stop_event.is_set():
-            self.validation = not self.validation
+            self.n_validations = self.n_validations + 1
             time.sleep(4)
         print(f"{self.name} ha terminado la lectura por rs232.")
     def getData(self):
