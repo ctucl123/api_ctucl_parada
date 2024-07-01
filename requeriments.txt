@@ -1,2 +1,0 @@
-pip install pyserial
-pip install flask
