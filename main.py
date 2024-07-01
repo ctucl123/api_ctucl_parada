@@ -17,7 +17,7 @@ def datos():
 
 @app.route("/abrir")
 def datos():
-    return gpiosManager.tarifaGeneral()
+    return gpioManager.tarifaGeneral()
 
 
 if __name__ == "__main__":
