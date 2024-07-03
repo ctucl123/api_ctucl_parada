@@ -11,15 +11,16 @@ class rs232Comunication(threading.Thread):
         self.data = []
         self.validation = False
         self.n_validations = 0
+        self.valor_actual = 0
     def run(self):
         while not self.stop_event.is_set():
             with self.lock:
                 self.valor_actual = random.randint(0, 40)
                 print(f"Generador: Nuevo valor generado {self.valor_actual}")
                 if self.valor_actual > 35:
-                    self.alerta = True
+                    self.validation = True
                 else:
-                    self.alerta = False
+                    self.validation = False
             time.sleep(1)
     def getData(self):
         return str(self.validation) 

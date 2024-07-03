@@ -46,12 +46,12 @@ class Manager(threading.Thread):
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.rs232.validation and self.activate:
-                    print(f"Se detecto una tarjeta {self.generador.data}")
+                    print(f"Se detecto una tarjeta {self.rs232.data}")
             time.sleep(0.1)
 
-    def activate(self):
+    def activateTurnstile(self):
         self.activate =  True
-    def desactivate(self):
+    def desactivateTurnstile(self):
         self.activate = False
  
         
