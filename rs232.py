@@ -42,7 +42,7 @@ class rs232Comunication(threading.Thread):
                     
             
     def getData(self):
-        return str(self.validation) 
+        return str(self.data) 
     def updateValidations(self,number):
         self.n_validations = number
  
