@@ -1,30 +1,30 @@
-# from gpiosManager import gpiosManager
+from gpiosManager import GpiosManager
 import threading
 import time
 
-# doors =  gpiosManager()
-# temporizador_event = threading.Event()
-# def timer(tiempo):
-#     global acceso_en_proceso
-#     inicio = time.time()
-#     while time.time() - inicio < tiempo:
-#         doors.tarifa_general()
-#         time.sleep(1)  # Ejecutar tarifa_general cada segundo
-#         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
-#             print("Sensor detecta movimiento (0)")
-#             while doors.ReadSensor() == 0:
-#                 time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
-#             if doors.ReadSensor() == 1:
-#                 print("Sensor volvió a 1, desactivando sistema")
-#                 doors.desactivarSistema()
-#                 acceso_en_proceso = False
-#                 break  # Salir del bucle while
-#         if temporizador_event.is_set():
-#             break
-#     global bandera
-#     bandera = False
-#     doors.turnstileBlock()
-#     acceso_en_proceso = False
+doors =  GpiosManager()
+temporizador_event = threading.Event()
+def timer(tiempo):
+    global acceso_en_proceso
+    inicio = time.time()
+    while time.time() - inicio < tiempo:
+        doors.tarifa_general()
+        time.sleep(1)  # Ejecutar tarifa_general cada segundo
+        if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
+            print("Sensor detecta movimiento (0)")
+            while doors.ReadSensor() == 0:
+                time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
+            if doors.ReadSensor() == 1:
+                print("Sensor volvió a 1, desactivando sistema")
+                doors.desactivarSistema()
+                acceso_en_proceso = False
+                break  # Salir del bucle while
+        if temporizador_event.is_set():
+            break
+    global bandera
+    bandera = False
+    doors.turnstileBlock()
+    acceso_en_proceso = False
 
 
 def test_timer():
@@ -51,7 +51,9 @@ class Manager(threading.Thread):
 
     def activateTurnstile(self):
         self.activate =  True
+        return "Logica del torniquete activada con exito"
     def desactivateTurnstile(self):
         self.activate = False
+        return "Logica del torniquete desactivada con exito"
  
         

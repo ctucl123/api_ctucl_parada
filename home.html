@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+</head>
+<body>
+    <h1>Calculadora</h1>
+    <form method="post">
+        <input type="number" name="num1" step="any" placeholder="Timer Entrada General" required>
+        <input type="number" name="num2" step="any" placeholder="Timer Entrada Especial" required>
+        <br><br>
+        <button type="submit" name="operation" value="Activate">Activar Logica</button>
+        <button type="submit" name="operation" value="Desactivate">Desactivar Logica</button>
+        <button type="submit" name="operation" value="OpenTurnstile">Abrir Puerta</button>
+        <button type="submit" name="operation" value="BlockTurnstile">Cerrar Puerta General</button>
+        <button type="submit" name="operation" value="ReadRs232">Leer RS232</button>
+        <button type="submit" name="operation" value="ReadSensor">Leer Sensor</button>
+    </form>
+    {% if result is not none %}
+        <h2>Resultado: {{ result }}</h2>
+    {% endif %}
+</body>
+</html>

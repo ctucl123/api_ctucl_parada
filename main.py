@@ -1,49 +1,53 @@
-from flask import Flask
+from flask import Flask, render_template, request
 import threading
 from rs232 import rs232Comunication
-# from gpiosManager import GpiosManager
+from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 app = Flask(__name__)
 stop_event = threading.Event()
 
-@app.route("/")
+@app.route('/', methods=['GET', 'POST'])
 def helloworld():
-    return "Hello World!"
+    result = None
+    if request.method == 'POST':
+        num1 = float(request.form.get('num1', 0))
+        num2 = float(request.form.get('num2', 0))
+        operation = request.form.get('operation')
+
+        if operation == 'Activate':
+            result = manager.activateTurnstile()
+        elif operation == 'Desactivate':
+            result = manager.desactivateTurnstile()
+        elif operation == 'OpenTurnstile':
+            manager.desactivateTurnstile()
+            gpios.turnstileOpen()
+            result = "mecanismo abierto"
+        elif operation == 'BlockTurnstile':
+            manager.desactivateTurnstile()
+            gpios.turnstileBlock()
+            result = "mecanismo cerrado"
+        elif operation == 'ReadRs232':
+            data = rs232.getData()
+            result = f'ultimo dato leido: {data}'
+        elif operation == 'ReadSensor':
+            estado = gpios.ReadSensor()
+            result = f'sensor: {estado}'
+
+    return render_template('calculator.html', result=result)
 
 @app.route("/datos")
 def datos():
     return rs232.getData()
 
-@app.route("/activar")
-def activarMecanismo():
-    manager.activateTurnstile()
-    return "ok"
 
-@app.route("/desactivate")
-def DesactivarMecanismo():
-    manager.desactivateTurnstile()
-    return "ok"
 
-# @app.route("/tarifa_general")
-# def test1():
-#     manager.desactivate()
-#     return gpioManager.turnstileOpen()
 
-# @app.route("/desactivar_sistema")
-# def test2():
-#     manager.desactivate()
-#     return gpioManager.turnstileBlock()
-
-# @app.route("/silla_ruedas")
-# def test3():
-#     manager.desactivate()
-#     return gpioManager.specialDoorOpen()
 
 
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232) 
-    #gpioManager = GpiosManager()
+    gpios = GpiosManager()
     rs232.start()
     manager.start()
     
