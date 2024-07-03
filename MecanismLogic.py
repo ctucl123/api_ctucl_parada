@@ -39,7 +39,7 @@ class Manager(threading.Thread):
         super().__init__()
         self.rs232 = rs232
         self.stop_event = stop_event
-        self.activate = False
+        self.activate = True
 
 
     def run(self):
