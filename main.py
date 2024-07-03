@@ -33,7 +33,7 @@ def helloworld():
             estado = gpios.ReadSensor()
             result = f'sensor: {estado}'
 
-    return render_template('calculator.html', result=result)
+    return render_template('home.html', result=result)
 
 @app.route("/datos")
 def datos():
