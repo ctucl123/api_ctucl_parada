@@ -34,8 +34,12 @@ class rs232Comunication(threading.Thread):
                                 self.validation = False
                         else:
                             self.invalid +=1
+                            self.validation = False
                             print("Formato de datos incorrecto")
-            time.sleep(1)
+                else:
+                    self.validation = False            
+                    
+            
     def getData(self):
         return str(self.validation) 
     def updateValidations(self,number):
