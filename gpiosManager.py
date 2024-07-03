@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-class gpiosManager():
+class GpiosManager():
     def __init__(self):
         super().__init__()
         GPIO.setmode(GPIO.BCM)
@@ -22,21 +22,26 @@ class gpiosManager():
         GPIO.output(self.semaforo, GPIO.HIGH)
         GPIO.output(self.electroiman, GPIO.LOW)
     
-    def tarifaGeneral(self):
+        
+    def turnstileOpen(self):
         GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1
         GPIO.output(self.cerradura2, GPIO.HIGH)  # Desactivar la cerradura 2
         GPIO.output(self.semaforo, GPIO.LOW) 
         return "puerta general abierta" 
-    def desactivarSistema(self):
+    def turnstileBlock(self):
         GPIO.output(self.cerradura1, GPIO.HIGH)
         GPIO.output(self.cerradura2, GPIO.HIGH)
         GPIO.output(self.semaforo, GPIO.HIGH)
         GPIO.output(self.electroiman, GPIO.LOW)
         return "sistema desactivado" 
-    def sillaRuedas(self):
+    def specialDoorOpen(self):
         GPIO.output(self.electroiman, GPIO.HIGH)
         GPIO.output(self.semaforo, GPIO.LOW) 
         GPIO.output(self.actuador, GPIO.HIGH)  
         time.sleep(1)
         GPIO.output(self.actuador, GPIO.LOW)
-        return "sistema silla de ruedas" 
+        return "sistema silla de ruedas"
+    def ReadSensor(self):
+        return bool(GPIO.input(self.sensor))
+
+        
