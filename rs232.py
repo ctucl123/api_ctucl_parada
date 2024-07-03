@@ -37,7 +37,8 @@ class rs232Comunication(threading.Thread):
                             self.validation = False
                             print("Formato de datos incorrecto")
                 else:
-                    self.validation = False            
+                    self.validation = False
+            time.sleep(0.5)            
                     
             
     def getData(self):
