@@ -5,17 +5,11 @@ import time
 
 doors =  GpiosManager()
 
-def test_timer():
-    print("Inicio la ejecucion")
-    for i in range(10):
-        time.sleep(2)
-    print("termino la ejecucion")
 
-def timer():   
+def timer(target_time):   
     inicio = time.time()
     doors.turnstileOpen()
-    print("todo bien hasta aca: ",inicio)
-    while time.time() - inicio < 8:
+    while time.time() - inicio < target_time:
         time.sleep(1)
         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
             print("Sensor detecta movimiento (0)")
@@ -34,15 +28,15 @@ class Manager(threading.Thread):
         self.rs232 = rs232
         self.stop_event = stop_event
         self.activate = True
-        self.timer_puerta_general = 8
-        self.timer_puerta_especial = 10
+        self.timer_puerta_general = 12
+        self.timer_puerta_especial = 12
         self.activatePass = 0
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.activatePass >0:
                     print(f'pases generados: {self.activatePass}')
-                    temporizador_thread = threading.Thread(target=timer)
+                    temporizador_thread = threading.Thread(target=timer,args=(self.timer_puerta_general,))
                     temporizador_thread.start()
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:

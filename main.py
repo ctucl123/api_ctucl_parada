@@ -38,6 +38,10 @@ def helloworld():
         elif operation == 'generatePass':
             manager.generarPase()
             result = f'pases generados: {manager.activatePass}'
+        elif operation == 'Setup':
+            manager.timer_puerta_general = num1
+            manager.timer_puerta_general = num2
+            result = f'tiempos actualizados con exito'
 
     return render_template('home.html', result=result)
 
