@@ -11,10 +11,10 @@ def test_timer():
         time.sleep(2)
     print("termino la ejecucion")
 
-def timer(tiempo):
-        
+def timer(tiempo):   
     inicio = time.time()
     doors.tarifa_general()
+    print("todo bien hasta aca: ",inicio)
     while time.time() - inicio < tiempo:
         time.sleep(1)
         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
@@ -34,14 +34,9 @@ class Manager(threading.Thread):
         self.rs232 = rs232
         self.stop_event = stop_event
         self.activate = True
-        self.cola_accesos = Queue()
         self.timer_puerta_general = 8
         self.timer_puerta_especial = 10
         self.activatePass = 0
-        self.bandera = False
-        self.temporizador_event = threading.Event()
-        self.acceso_en_proceso = True
-
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
