@@ -11,11 +11,11 @@ def test_timer():
         time.sleep(2)
     print("termino la ejecucion")
 
-def timer(tiempo):   
+def timer():   
     inicio = time.time()
     doors.tarifa_general()
     print("todo bien hasta aca: ",inicio)
-    while time.time() - inicio < tiempo:
+    while time.time() - inicio < 8:
         time.sleep(1)
         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
             print("Sensor detecta movimiento (0)")
@@ -42,7 +42,7 @@ class Manager(threading.Thread):
             with self.rs232.lock:
                 if self.activatePass >0:
                     print(f'pases generados: {self.activatePass}')
-                    temporizador_thread = threading.Thread(target=timer, args=(self.timer_puerta_general))
+                    temporizador_thread = threading.Thread(target=timer, args=(self.timer_puerta_general,))
                     temporizador_thread.start()
                     if temporizador_thread.is_alive() == False:
                         temporizador_thread.join()
