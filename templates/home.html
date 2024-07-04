@@ -1,62 +1,65 @@
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Menu</title>
-  <link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='style.css') }}">
-</head>
 
+<head>
+	<meta charset="utf-8">
+	<title>Menu</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
-  <div class="login-root">
-    <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
-    
-      <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
-        <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
-          <h1><a href="" rel="dofollow">Menu API</a></h1>
-        </div>
-        <div class="formbg-outer">
-          <div class="formbg">
-            <div class="formbg-inner padding-horizontal--48">
-              <span class="padding-bottom--15">Configuraciones</span>
-              <form id="stripe-login" method="post" >
-                <div class="field padding-bottom--24">
-                  <label for="email">Tiempo Puerta General</label>
-                  <input type="number" name="num1" step="any" value="12" >
-                </div>
-                <div class="field padding-bottom--24">
-                  
-                    <label for="password">Tiempo Puerta Especial</label>
-                    <input type="number" name="num2" step="any" value="12" >
-                </div>
-             
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="Activate"/>
-                </div>
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="Desactivate"/>
-                </div>
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="OpenTurnstile"/>
-                </div>
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="BlockTurnstile"/>
-                </div>
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="ReadRs232"/>
-                </div>
-                <div class="field padding-bottom--24">
-                    <input type="submit" name="operation" value="ReadSensor"/>
-                </div>
-             </form>
-            {% if result is not none %}
-                <h2>Resultado: {{ result }}</h2>
-            {% endif %}
-            </div>
-          </div>
-       
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+		<div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+			<div class="formbg-outer">
+				<div class="formbg">
+					<div class=" padding-horizontal--48">
+						<span class="padding-bottom--15">Configuraciones</span>
+						<form id="stripe-login" method="post">
+							
+								<div class="field padding-bottom--24">
+									<label for="email">Tiempo Puerta General</label>
+									<input type="number" name="num1" step="any" value="12">
+								</div>
+
+								<div class="field padding-bottom--24">
+									<label for="password">Tiempo Puerta Especial</label>
+									<input type="number" name="num2" step="any" value="12">
+								</div>
+								<div class=" padding-bottom--24">
+									<button  class="custom-button-config" type="submit" name="operation" value="Activate" />Actualizar Parametros</button>
+								</div>
+							
+
+							<div class=" padding-bottom--24">
+								<button class="custom-button" type="submit" name="operation" value="Activate" />Activar Logica</button>
+							</div>
+
+							<div class=" padding-bottom--24">
+								<button  class="custom-button" type="submit" name="operation" value="Desactivate" />Desactivar Logica</button>
+							</div>
+
+							<div class=" padding-bottom--24">
+								<button class="custom-button" type="submit" name="operation" value="OpenTurnstile" />Abrir Puerta General</button>
+							</div>
+
+							<div class=" padding-bottom--24">
+								<button class="custom-button" type="submit" name="operation" value="BlockTurnstile" />Bloquear Puerta General</button>
+							</div>
+
+							<div class=" padding-bottom--24">
+								<button class="custom-button" type="submit" name="operation" value="ReadRs232" />Leer RS232</button>
+							</div>
+							<div class=" padding-bottom--24">
+								<button class="custom-button" type="submit" name="operation" value="ReadSensor" />Leer Sensor</button>
+							</div>
+						</form>
+						{% if result is not none %}
+							<h2>Resultado: {{ result }}</h2>
+						{% endif %}
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
