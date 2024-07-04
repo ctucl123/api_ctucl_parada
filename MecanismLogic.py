@@ -10,15 +10,15 @@ def timer(target_time):
     inicio = time.time()
     doors.turnstileOpen()
     while time.time() - inicio < target_time:
-        time.sleep(1)
         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
             print("Sensor detecta movimiento (0)")
-            while doors.ReadSensor() == 0:
+            while doors.ReadSensor() == False:
                 time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
-            if doors.ReadSensor() == 1:
+            if doors.ReadSensor():
                 print("Sensor volvió a 1, desactivando sistema")
                 doors.turnstileBlock()
                 break
+        time.sleep(0.1)
     print("termino la ejecucion")
     doors.turnstileBlock()
 
