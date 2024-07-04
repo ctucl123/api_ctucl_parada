@@ -13,7 +13,7 @@ def test_timer():
 
 def timer():   
     inicio = time.time()
-    doors.tarifa_general()
+    doors.turnstileOpen()
     print("todo bien hasta aca: ",inicio)
     while time.time() - inicio < 8:
         time.sleep(1)
@@ -23,7 +23,7 @@ def timer():
                 time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
             if doors.ReadSensor() == 1:
                 print("Sensor volvió a 1, desactivando sistema")
-                doors.desactivarSistema()
+                doors.turnstileBlock()
                 break
     print("termino la ejecucion")
     doors.turnstileBlock()
@@ -55,7 +55,7 @@ class Manager(threading.Thread):
                     if self.rs232.validation and self.activate:
                         if self.rs232.data[18] == '6':
                             print("funciona")
-                            self.start_temporizador(self.timer_puerta_general) 
+                            
                                        
             time.sleep(0.4)
     def generarPase(self):
