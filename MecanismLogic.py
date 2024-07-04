@@ -44,13 +44,12 @@ class Manager(threading.Thread):
                     print(f'pases generados: {self.activatePass}')
                     temporizador_thread = threading.Thread(target=timer)
                     temporizador_thread.start()
-                    if temporizador_thread.is_alive() == False:
-                        temporizador_thread.join()
-                        aux_pass =  self.activatePass - 1
-                        if aux_pass < 0:
-                            self.activatePass = 0
-                        else:
-                            self.activatePass = aux_pass
+                    aux_pass =  self.activatePass - 1
+                    if aux_pass < 0:
+                        self.activatePass = 0
+                    else:
+                        self.activatePass = aux_pass
+                    temporizador_thread.join()
                 else:    
                     if self.rs232.validation and self.activate:
                         if self.rs232.data[18] == '6':
