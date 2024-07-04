@@ -42,7 +42,7 @@ class Manager(threading.Thread):
             with self.rs232.lock:
                 if self.activatePass >0:
                     print(f'pases generados: {self.activatePass}')
-                    temporizador_thread = threading.Thread(target=timer, args=(self.timer_puerta_general,))
+                    temporizador_thread = threading.Thread(target=timer)
                     temporizador_thread.start()
                     if temporizador_thread.is_alive() == False:
                         temporizador_thread.join()
