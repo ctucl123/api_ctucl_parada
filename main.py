@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
-from api_ctucl_parada.MecanismLogic import Manager
+from MecanismLogic import Manager
 app = Flask(__name__)
 stop_event = threading.Event()
 
