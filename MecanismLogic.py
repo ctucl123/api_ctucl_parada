@@ -1,7 +1,7 @@
 from gpiosManager import GpiosManager
 import threading
 import time
-from queue import Queue
+
 
 doors =  GpiosManager()
 
