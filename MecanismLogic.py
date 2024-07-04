@@ -47,7 +47,9 @@ class Manager(threading.Thread):
                 else:    
                     if self.rs232.validation and self.activate:
                         if self.rs232.data[18] == '6':
-                            print("funciona")
+                            temporizador_thread = threading.Thread(target=timer,args=(self.timer_puerta_general,))
+                            temporizador_thread.start()
+                            temporizador_thread.join()
                             
                                        
             time.sleep(0.4)
