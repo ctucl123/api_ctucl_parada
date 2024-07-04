@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
-from MecanismLogic import Manager
+from api_ctucl_parada.MecanismLogic import Manager
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -32,6 +32,12 @@ def helloworld():
         elif operation == 'ReadSensor':
             estado = gpios.ReadSensor()
             result = f'sensor: {estado}'
+        elif operation == 'ReadSensor':
+            estado = gpios.ReadSensor()
+            result = f'sensor: {estado}'
+        elif operation == 'generatePass':
+            manager.generarPase()
+            result = f'pases generados: {manager.activatePass}'
 
     return render_template('home.html', result=result)
 

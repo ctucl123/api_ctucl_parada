@@ -24,12 +24,8 @@ class rs232Comunication(threading.Thread):
                         if linea.startswith('$>') and linea.endswith('#'):
                             data_string = linea[2:-1]  
                             if len(data_string) == 64:
-                                if data_string[18] == '6':
                                     self.data = data_string
                                     self.validation = True
-                                else:
-                                    self.validation = False
-                                    print("Tarjeta Diferente")
                             else:
                                 self.validation = False
                         else:
