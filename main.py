@@ -43,6 +43,10 @@ def helloworld():
             manager.timer_puerta_general = num1
             manager.timer_puerta_general = num2
             result = f'tiempos actualizados con exito'
+        elif operation == 'TestAudio':
+
+            result = audio.AdelantePorfavor()
+            
 
     return render_template('home.html', result=result)
 
