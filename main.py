@@ -3,6 +3,7 @@ import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
+from audioManager import AudioManager
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -57,14 +58,16 @@ def datos():
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232) 
+    audio = AudioManager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     rs232.start()
     manager.start()
-    
+    audio.start()
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
     finally:
         stop_event.set()
         rs232.join()
         manager.join()
+        audio.join()
         print("programa terminado!")
