@@ -22,6 +22,23 @@ def timer(target_time):
     print("termino la ejecucion")
     doors.turnstileBlock()
 
+def timerSpecialDoor(target_time):
+    doors.electroImanOff()
+    time.sleep(2)
+    doors.specialDoorOpen()
+    while doors.ReadFinCarrera() != False:
+        time.sleep(0.1)
+    doors.specialDoorOff()
+    inicio = time.time()
+    while time.time() - inicio < target_time:
+        time.sleep(0.1)
+    doors.specialDoorClose() 
+    time.sleep(3)
+    doors.specialDoorOff()
+    doors.electroImanOn()
+    print("termino la ejecucion")
+
+
 class Manager(threading.Thread):
     def __init__(self,rs232, stop_event):
         super().__init__()
@@ -31,6 +48,7 @@ class Manager(threading.Thread):
         self.timer_puerta_general = 12
         self.timer_puerta_especial = 12
         self.activatePass = 0
+        self.specialPass = 0
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
@@ -44,17 +62,33 @@ class Manager(threading.Thread):
                     else:
                         self.activatePass = aux_pass
                     temporizador_thread.join()
+                elif self.specialPass > 0:
+                    temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.timer_puerta_especial,))
+                    temporizador_special.start()
+                    aux_pass_2 =  self.specialPass - 1
+                    if aux_pass_2 < 0:
+                        self.specialPass = 0
+                    else:
+                        self.specialPass = aux_pass_2
+                    temporizador_special.join()
                 else:    
                     if self.rs232.validation and self.activate:
                         if self.rs232.data[18] == '6':
                             temporizador_thread = threading.Thread(target=timer,args=(self.timer_puerta_general,))
                             temporizador_thread.start()
                             temporizador_thread.join()
-                            
+                        elif self.rs232.data[18] == '3':
+                            temporizador_special = threading.Thread(target=timer,args=(self.timer_puerta_especial,))
+                            temporizador_special.start()
+                            temporizador_special.join()
+
                                        
             time.sleep(0.4)
     def generarPase(self):
         self.activatePass += 1
+    def generarEspecialPass(self):
+        self.specialPass += 1
+        return "Pase especial con exito"
 
     def activateTurnstile(self):
         self.activate =  True

@@ -33,8 +33,8 @@ def helloworld():
         elif operation == 'ReadSensor':
             estado = gpios.ReadSensor()
             result = f'sensor: {estado}'
-        elif operation == 'ReadSensor':
-            estado = gpios.ReadSensor()
+        elif operation == 'ReadFin':
+            estado = gpios.ReadFinCarrera()
             result = f'sensor: {estado}'
         elif operation == 'generatePass':
             manager.generarPase()
@@ -44,9 +44,23 @@ def helloworld():
             manager.timer_puerta_general = num2
             result = f'tiempos actualizados con exito'
         elif operation == 'TestAudio':
-
             result = audio.AdelantePorfavor()
-            
+        elif operation == 'TestCerradura1':
+            result = gpios.testCerradura1()
+        elif operation == 'TestCerradura2':
+            result = gpios.testCerradura2()
+        elif operation == 'TestLuzLed':
+            result = gpios.testLuzLed()
+        elif operation == 'TestSpecial':
+            result = manager.generarEspecialPass()
+        elif operation == 'ElectroImanOn':
+            result == gpios.electroImanOn()
+        elif operation == 'ElectroImanOff':
+            result == gpios.electroImanOff()
+        elif operation == 'ActuadorOff':
+            result == gpios.specialDoorOff()
+
+
 
     return render_template('home.html', result=result)
 
