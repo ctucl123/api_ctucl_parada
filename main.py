@@ -38,6 +38,7 @@ def helloworld():
             result = f'sensor: {estado}'
         elif operation == 'generatePass':
             manager.generarPase()
+            audio.AdelantePorfavor()
             result = f'pases generados: {manager.activatePass}'
         elif operation == 'Setup':
             manager.timer_puerta_general = num1
@@ -53,15 +54,15 @@ def helloworld():
             result = gpios.testLuzLed()
         elif operation == 'TestSpecial':
             result = manager.generarEspecialPass()
+            audio.AdelantePorfavor()
         elif operation == 'ElectroImanOn':
             result == gpios.electroImanOn()
         elif operation == 'ElectroImanOff':
             result == gpios.electroImanOff()
+        elif operation == 'TestearReles':
+            result == gpios.testearReles()
         elif operation == 'ActuadorOff':
             result == gpios.specialDoorOff()
-
-
-
     return render_template('home.html', result=result)
 
 @app.route("/datos")

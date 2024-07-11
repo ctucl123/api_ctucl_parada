@@ -5,14 +5,14 @@ import datetime
 import threading
 
 audio_file_paths = [
-            "/home/cristiandv7/sounds_wav/estudiante.wav",
-             "/home/cristiandv7/sounds_wav/lema.wav",
-             "/home/cristiandv7/sounds_wav/loja_ciudad_cultura.wav",
-             "/home/cristiandv7/sounds_wav/monitoreo.wav",
-             "/home/cristiandv7/sounds_wav/recargar.wav",
+           "sounds/estudiante.wav",
+             "sounds/lema.wav",
+             "sounds/loja_ciudad_cultura.wav",
+             "sounds/monitoreo.wav",
+             "sounds/recargar.wav",
                     ]
 
-adelante ="/home/cristiandv7/sounds_wav/adelante_porfavor.wav"
+adelante ="sounds/adelante_porfavor.wav"
 
 
 class AudioManager(threading.Thread):
