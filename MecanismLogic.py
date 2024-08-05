@@ -7,8 +7,8 @@ doors =  GpiosManager()
 
 
 def timer(target_time):   
-    inicio = time.time()
     doors.turnstileOpen()
+    inicio = time.time()
     while time.time() - inicio < target_time:
         if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
             print("Sensor detecta movimiento (0)")
@@ -17,6 +17,7 @@ def timer(target_time):
             if doors.ReadSensor():
                 print("Sensor volvió a 1, desactivando sistema")
                 doors.turnstileBlock()
+                time.sleep(2)
                 break
         time.sleep(0.1)
     print("termino la ejecucion")
@@ -26,7 +27,11 @@ def timerSpecialDoor(target_time):
     doors.electroImanOff()
     time.sleep(2)
     doors.specialDoorOpen()
+    inicio = time.time()
+    prevent_time = 5 ## este parametro tambien debe ser configurable
     while doors.ReadFinCarrera() != False:
+        if time.time() - inicio > prevent_time:
+            break
         time.sleep(0.1)
     doors.specialDoorOff()
     inicio = time.time()
