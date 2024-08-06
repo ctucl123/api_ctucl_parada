@@ -6,8 +6,8 @@ class GpiosManager():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         #pines de salidas
-        self.cerradura2 = 23
-        self.cerradura1 = 24
+        self.cerradura1 = 23
+        self.pin_libre0 = 24
         self.actuador_down = 17
         self.actuador_up = 27
         self.semaforo = 25
@@ -18,8 +18,8 @@ class GpiosManager():
         self.fin_carrera = 16
         self.sensor = 26
         # declaracion de salidas
-        GPIO.setup(self.cerradura2, GPIO.OUT)
         GPIO.setup(self.cerradura1, GPIO.OUT)
+        GPIO.setup(self.pin_libre0, GPIO.OUT)
         GPIO.setup(self.actuador_down, GPIO.OUT)
         GPIO.setup(self.actuador_up, GPIO.OUT)
         GPIO.setup(self.semaforo, GPIO.OUT)
@@ -31,20 +31,18 @@ class GpiosManager():
         GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         #estados iniciales por defecto
         GPIO.output(self.cerradura1, GPIO.HIGH)
-        GPIO.output(self.cerradura2, GPIO.HIGH)
+        GPIO.output(self.pin_libre0, GPIO.HIGH)
         GPIO.output(self.semaforo, GPIO.HIGH)
         GPIO.output(self.actuador_up, GPIO.HIGH)
         GPIO.output(self.actuador_down, GPIO.HIGH)
     
         
     def turnstileOpen(self):
-        GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1
-        GPIO.output(self.cerradura2, GPIO.HIGH)  # Desactivar la cerradura 2
+        GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1 # Desactivar la cerradura 2
         GPIO.output(self.semaforo, GPIO.LOW) 
         return "puerta general abierta" 
     def turnstileBlock(self):
         GPIO.output(self.cerradura1, GPIO.HIGH)
-        GPIO.output(self.cerradura2, GPIO.HIGH)
         GPIO.output(self.semaforo, GPIO.HIGH)
         return "puerta general bloqueada" 
     
@@ -62,9 +60,9 @@ class GpiosManager():
         return 'Luz Led testeada con exito'
     
     def testCerradura2(self):
-        GPIO.output(self.cerradura2, GPIO.LOW)
+        GPIO.output(self.pin_libre0, GPIO.LOW)
         time.sleep(2)
-        GPIO.output(self.cerradura2, GPIO.HIGH)
+        GPIO.output(self.pin_libre0, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 2 testeada con exito'
 
@@ -98,9 +96,9 @@ class GpiosManager():
     
     def testearReles(self):
         for i in range(3):
-            GPIO.output(self.cerradura2,GPIO.LOW)
-            time.sleep(1)
             GPIO.output(self.cerradura1,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre0,GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.actuador_down,GPIO.LOW)
             time.sleep(1)
@@ -126,9 +124,9 @@ class GpiosManager():
             time.sleep(1)
             GPIO.output(self.actuador_down,GPIO.HIGH)
             time.sleep(1)
-            GPIO.output(self.cerradura1,GPIO.HIGH)
+            GPIO.output(self.pin_libre0,GPIO.HIGH)
             time.sleep(1)
-            GPIO.output(self.cerradura2,GPIO.HIGH)
+            GPIO.output(self.cerradura1,GPIO.HIGH)
             time.sleep(1)
 
         
