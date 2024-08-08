@@ -38,14 +38,15 @@ def helloworld():
             result = f'sensor: {estado}'
         elif operation == 'generatePass':
             manager.generarPase()
-            audio.AdelantePorfavor()
+            #audio.AdelantePorfavor()
             result = f'pases generados: {manager.activatePass}'
         elif operation == 'Setup':
             manager.timer_puerta_general = num1
             manager.timer_puerta_general = num2
             result = f'tiempos actualizados con exito'
         elif operation == 'TestAudio':
-            result = audio.AdelantePorfavor()
+            #result = audio.AdelantePorfavor()
+            result = 'funcionando el audio'
         elif operation == 'TestCerradura1':
             result = gpios.testCerradura1()
         elif operation == 'TestCerradura2':
@@ -54,7 +55,7 @@ def helloworld():
             result = gpios.testLuzLed()
         elif operation == 'TestSpecial':
             result = manager.generarEspecialPass()
-            audio.AdelantePorfavor()
+            #audio.AdelantePorfavor()
         elif operation == 'ElectroImanOn':
             result == gpios.electroImanOn()
         elif operation == 'ElectroImanOff':
@@ -77,16 +78,16 @@ def datos():
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232) 
-    audio = AudioManager(stop_event=stop_event,rs232=rs232)
+    # audio = AudioManager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     rs232.start()
     manager.start()
-    audio.start()
+    # audio.start()
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
     finally:
         stop_event.set()
         rs232.join()
         manager.join()
-        audio.join()
+        # audio.join()
         print("programa terminado!")

@@ -6,35 +6,35 @@ class GpiosManager():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         #pines de salidas
-        self.cerradura1 = 23
-        self.pin_libre0 = 24
-        self.actuador_down = 17
-        self.actuador_up = 27
-        self.semaforo = 25
-        self.electroiman = 0
-        self.pin_libre1 = 5
-        self.pin_libre2 = 6
+        self.cerradura1 = 6
+        self.electroiman = 5
+        self.actuador_up = 21
+        self.actuador_down = 20
+        self.semaforo = 27
+        self.pin_libre1 = 17
+        self.pin_libre2 = 24
+        self.pin_libre3 = 23
         # pines de entradas
         self.fin_carrera = 16
         self.sensor = 26
         # declaracion de salidas
         GPIO.setup(self.cerradura1, GPIO.OUT)
-        GPIO.setup(self.pin_libre0, GPIO.OUT)
-        GPIO.setup(self.actuador_down, GPIO.OUT)
-        GPIO.setup(self.actuador_up, GPIO.OUT)
-        GPIO.setup(self.semaforo, GPIO.OUT)
         GPIO.setup(self.electroiman, GPIO.OUT)
+        GPIO.setup(self.actuador_up, GPIO.OUT)
+        GPIO.setup(self.actuador_down, GPIO.OUT)
+        GPIO.setup(self.semaforo, GPIO.OUT)
         GPIO.setup(self.pin_libre1, GPIO.OUT)
         GPIO.setup(self.pin_libre2, GPIO.OUT)
+        GPIO.setup(self.pin_libre3, GPIO.OUT)
         # declaracion de entradas
-        GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         #estados iniciales por defecto
-        GPIO.output(self.cerradura1, GPIO.HIGH)
-        GPIO.output(self.pin_libre0, GPIO.HIGH)
-        GPIO.output(self.semaforo, GPIO.HIGH)
+        GPIO.output(self.cerradura1, GPIO.LOW)
         GPIO.output(self.actuador_up, GPIO.HIGH)
         GPIO.output(self.actuador_down, GPIO.HIGH)
+        GPIO.output(self.semaforo, GPIO.HIGH)
+        GPIO.output(self.pin_libre1, GPIO.HIGH)
     
         
     def turnstileOpen(self):
@@ -60,20 +60,22 @@ class GpiosManager():
         return 'Luz Led testeada con exito'
     
     def testCerradura2(self):
-        GPIO.output(self.pin_libre0, GPIO.LOW)
+        GPIO.output(self.pin_libre1, GPIO.LOW)
         time.sleep(2)
-        GPIO.output(self.pin_libre0, GPIO.HIGH)
+        GPIO.output(self.pin_libre1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 2 testeada con exito'
 
     def specialDoorOpen(self):
         GPIO.output(self.actuador_down, GPIO.HIGH)
         GPIO.output(self.actuador_up, GPIO.LOW)
+        GPIO.output(self.semaforo, GPIO.LOW) 
         return "Puerta especial Abierta"
     
     def specialDoorClose(self):
         GPIO.output(self.actuador_up, GPIO.HIGH)
         GPIO.output(self.actuador_down, GPIO.LOW)
+        GPIO.output(self.semaforo, GPIO.HIGH) 
         return "Puerta Especial Cerrada"
     
     def specialDoorOff(self):
@@ -98,33 +100,33 @@ class GpiosManager():
         for i in range(3):
             GPIO.output(self.cerradura1,GPIO.LOW)
             time.sleep(1)
-            GPIO.output(self.pin_libre0,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.actuador_down,GPIO.LOW)
+            GPIO.output(self.electroiman,GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.actuador_up,GPIO.LOW)
             time.sleep(1)
-            GPIO.output(self.semaforo,GPIO.LOW)
+            GPIO.output(self.actuador_down,GPIO.LOW)
             time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.LOW)
+            GPIO.output(self.semaforo,GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.pin_libre1,GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.pin_libre2,GPIO.LOW)
             time.sleep(1)
+            GPIO.output(self.pin_libre3,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre3,GPIO.HIGH)
+            time.sleep(1)
             GPIO.output(self.pin_libre2,GPIO.HIGH)
             time.sleep(1)
             GPIO.output(self.pin_libre1,GPIO.HIGH)
             time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.HIGH)
-            time.sleep(1)
             GPIO.output(self.semaforo,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.actuador_up,GPIO.HIGH)
             time.sleep(1)
             GPIO.output(self.actuador_down,GPIO.HIGH)
             time.sleep(1)
-            GPIO.output(self.pin_libre0,GPIO.HIGH)
+            GPIO.output(self.actuador_up,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.electroiman,GPIO.HIGH)
             time.sleep(1)
             GPIO.output(self.cerradura1,GPIO.HIGH)
             time.sleep(1)
