@@ -3,7 +3,7 @@ import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
-from audioManager import AudioManager
+#from audioManager import AudioManager
 app = Flask(__name__)
 stop_event = threading.Event()
 
