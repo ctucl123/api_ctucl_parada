@@ -42,7 +42,7 @@ def helloworld():
             result = f'pases generados: {manager.activatePass}'
         elif operation == 'Setup':
             manager.timer_puerta_general = num1
-            manager.timer_puerta_general = num2
+            manager.timer_puerta_especial = num2
             result = f'tiempos actualizados con exito'
         elif operation == 'TestAudio':
             #result = audio.AdelantePorfavor()
