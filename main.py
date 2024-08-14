@@ -14,7 +14,6 @@ def helloworld():
         num1 = float(request.form.get('num1', 0))
         num2 = float(request.form.get('num2', 0))
         operation = request.form.get('operation')
-
         if operation == 'Activate':
             result = manager.activateTurnstile()
         elif operation == 'Desactivate':
