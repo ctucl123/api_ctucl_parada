@@ -29,13 +29,7 @@ class GpiosManager():
         # declaracion de entradas
         GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        #estados iniciales por defecto
-        GPIO.output(self.cerradura1, GPIO.LOW)
-        GPIO.output(self.actuador_up, GPIO.HIGH)
-        GPIO.output(self.actuador_down, GPIO.HIGH)
-        GPIO.output(self.semaforo, GPIO.HIGH)
-        GPIO.output(self.pin_libre1, GPIO.HIGH)
-    
+       
         
     def turnstileOpen(self):
         GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1 # Desactivar la cerradura 2
@@ -96,6 +90,12 @@ class GpiosManager():
         GPIO.output(self.electroiman,GPIO.HIGH)
         return 'electro iman desactivado'
     
+    
+    
+    # def testearSensor(self):
+    #     inicio = time.time()
+    #     while time.time() - inicio < target_time:
+
     def testearReles(self):
         for i in range(3):
             GPIO.output(self.cerradura1,GPIO.LOW)

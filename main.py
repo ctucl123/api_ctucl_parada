@@ -4,6 +4,7 @@ from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 #from audioManager import AudioManager
+#v2
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -22,6 +23,15 @@ def helloworld():
             manager.desactivateTurnstile()
             gpios.turnstileOpen()
             result = "mecanismo abierto"
+
+        elif operation == 'OpenSpecial':
+            gpios.specialDoorOpen()
+            result = "puerta especial abriendose !!!!"
+        
+        elif operation == 'CloseSpecial':
+            gpios.specialDoorClose()
+            result = "puerta especial cerrandose !!!!"
+
         elif operation == 'BlockTurnstile':
             manager.desactivateTurnstile()
             gpios.turnstileBlock()

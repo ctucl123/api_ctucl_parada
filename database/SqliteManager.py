@@ -3,23 +3,25 @@ from datetime import datetime
 
 current_datetime = datetime.now()
 
-fecha_hora_formateada = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-print("Fecha y hora formateadas:", fecha_hora_formateada)
+data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 codigo = '00100580000115620006565611212'
-print(codigo)
+data = ("3",str(data_time),codigo)
 
-####
-# conn = sqlite3.connect('transactions.db')
-# print("Opened database successfully")
-# conn.execute('''CREATE TABLE TRANSACTIONS
-#          (ID INT PRIMARY KEY     NOT NULL,
-#          VALUE           TEXT    NOT NULL,
-#          DATE            TIMESTAMP     NOT NULL);''')
+def add_transaction(conn, transaction):
+    sql = ''' INSERT INTO TRANSACTIONS(ID,VALUE,DATE)
+              VALUES(?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, transaction)
+    conn.commit()
+    return cur.lastrowid
 
-# print("Table created successfully")
-# conn.execute(f"INSERT INTO TRANSACTIONS (ID,VALUE,DATE) \
-#       VALUES (1,{codigo},{timestamp})");
-# conn.commit()
-# print("Records created successfully")
-# conn.close()
+def insertTransaction():
+    try:
+        with sqlite3.connect('transactions.db') as conn:
+            project_id = add_transaction(conn, data)
+            print(f'Created a TRANSACTION with the id {project_id}')
+    except sqlite3.Error as e:
+        print(e)
+
+insertTransaction()
