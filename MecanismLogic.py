@@ -1,27 +1,59 @@
 from gpiosManager import GpiosManager
 import threading
 import time
+import subprocess
 
+#version 1.1
 
 doors =  GpiosManager()
-
-
-def timer(target_time,delay):   
-    doors.turnstileOpen()
-    inicio = time.time()
-    while time.time() - inicio < target_time:
-        if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
-            #print("Sensor detecta movimiento (0)")
-            while doors.ReadSensor() == False:
-                time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
-            if doors.ReadSensor():
-                #print("Sensor volvió a 1, desactivando sistema")
-                doors.turnstileBlock()
-                time.sleep(delay)
-                break
-        time.sleep(0.1)
-    #print("termino la ejecucion")
-    doors.turnstileBlock()
+ingreso= "sounds/ingreso.wav"
+retorno= "sounds/retorno.wav"
+def timer(target_time,delay):
+    if doors.ReadSensor() == True:
+        doors.turnstileOpen()
+        inicio = time.time()
+        try:
+            subprocess.run(["aplay",ingreso], check=True)
+        except Exception as e:
+            print("Error audio")
+        while time.time() - inicio < target_time:
+            if doors.ReadSensor() == 0: 
+                timeaux = time.time()
+                while doors.ReadSensor() == False:
+                    time.sleep(0.1) 
+                    if time.time() - timeaux >= target_time:
+                        doors.turnstileBlock()
+                        break
+                if doors.ReadSensor():
+                    doors.turnstileBlock()
+                    time.sleep(delay)
+                    break
+            time.sleep(0.1)
+        doors.turnstileBlock()
+    elif doors.ReadSensor()==False:
+        doors.turnstileBlock()
+        try:
+            subprocess.run(["aplay", retorno], check=True)
+        except Exception as e:
+            print("Error audio")
+        while doors.ReadSensor() == False:  # Esperar hasta que el sensor sea True
+            time.sleep(0.1)
+        doors.turnstileOpen()
+        try:
+            subprocess.run(["aplay", ingreso], check=True)
+        except Exception as e:
+            print("Error audio")
+        inicio = time.time()
+        while time.time() - inicio < target_time:
+            if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
+                while doors.ReadSensor() == False:
+                    time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
+                if doors.ReadSensor():
+                    doors.turnstileBlock()
+                    time.sleep(delay)
+                    break
+            time.sleep(0.1)
+        doors.turnstileBlock()   
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     time.sleep(delay)
@@ -39,10 +71,10 @@ class Manager(threading.Thread):
         super().__init__()
         self.rs232 = rs232
         self.stop_event = stop_event
-        self.time_puerta_general = 12
-        self.time_puerta_especial = 12
-        self.time_open_special = 16
-        self.time_close_special = 16
+        self.time_turnstile = 12
+        self.time_special_door = 12
+        self.time_open_actuator = 16
+        self.time_close_actuator = 16
         self.time_delay_turnstile = 2
         self.time_delay_special = 1
         self.activatePass = 0
@@ -51,8 +83,7 @@ class Manager(threading.Thread):
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.activatePass >0:
-                    #print(f'pases generados: {self.activatePass}')
-                    temporizador_thread = threading.Thread(target=timer,args=(self.time_puerta_general,self.time_delay_turnstile))
+                    temporizador_thread = threading.Thread(target=timer,args=(self.time_turnstile,self.time_delay_turnstile))
                     temporizador_thread.start()
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:
@@ -61,7 +92,7 @@ class Manager(threading.Thread):
                         self.activatePass = aux_pass
                     temporizador_thread.join()
                 elif self.specialPass > 0:
-                    temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_puerta_especial,self.time_open_special,self.time_close_special,self.time_delay_turnstile))
+                    temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                     temporizador_special.start()
                     aux_pass_2 =  self.specialPass - 1
                     if aux_pass_2 < 0:
@@ -72,27 +103,20 @@ class Manager(threading.Thread):
                 else:    
                     if self.rs232.validation:
                         if self.rs232.data[18] != '3':
-                            temporizador_thread = threading.Thread(target=timer,args=(self.time_puerta_general,self.time_delay_turnstile))
+                            temporizador_thread = threading.Thread(target=timer,args=(self.time_turnstile,self.time_delay_turnstile))
                             temporizador_thread.start()
                             temporizador_thread.join()
                         elif self.rs232.data[18] == '3':
-                            temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_puerta_especial,self.time_open_special,self.time_close_special,self.time_delay_turnstile))
+                            temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
                             temporizador_special.join()             
             time.sleep(0.1)
-    def generarPase(self):
+    def generatePass(self):
         self.activatePass += 1
-    def generarEspecialPass(self):
+    def generateSpecialPass(self):
         self.specialPass += 1
         return "Pase especial con exito"
 
-    def activateTurnstile(self):
-        self.activate =  True
-        return "Logica del torniquete activada con exito"
-    
-    def desactivateTurnstile(self):
-        self.activate = False
-        return "Logica del torniquete desactivada con exito"
     
     
 

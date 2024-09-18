@@ -40,25 +40,19 @@ class GpiosManager():
         GPIO.output(self.semaforo, GPIO.HIGH)
         return "puerta general bloqueada" 
     
-    def testCerradura1(self):
+    def testLock(self):
         GPIO.output(self.cerradura1, GPIO.LOW)
         time.sleep(2)
         GPIO.output(self.cerradura1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 1 testeada con exito'
-    def testLuzLed(self):
+    def testArrow(self):
         GPIO.output(self.semaforo, GPIO.LOW)
         time.sleep(2)
         GPIO.output(self.semaforo, GPIO.HIGH)
         time.sleep(2)
         return 'Luz Led testeada con exito'
     
-    def testCerradura2(self):
-        GPIO.output(self.pin_libre1, GPIO.LOW)
-        time.sleep(2)
-        GPIO.output(self.pin_libre1, GPIO.HIGH)
-        time.sleep(2)
-        return 'Cerradura 2 testeada con exito'
 
     def specialDoorOpen(self):
         GPIO.output(self.actuador_down, GPIO.HIGH)
@@ -80,23 +74,9 @@ class GpiosManager():
     def ReadSensor(self):
         return bool(GPIO.input(self.sensor))
     
-    def ReadFinCarrera(self):
-        return bool(GPIO.input(self.fin_carrera))
-    def electroImanOn(self):
-        GPIO.output(self.electroiman,GPIO.LOW)
-        return 'electro iman activado'
-    
-    def electroImanOff(self):
-        GPIO.output(self.electroiman,GPIO.HIGH)
-        return 'electro iman desactivado'
-    
-    
-    
-    # def testearSensor(self):
-    #     inicio = time.time()
-    #     while time.time() - inicio < target_time:
 
-    def testearReles(self):
+
+    def testRelay(self):
         for i in range(3):
             GPIO.output(self.cerradura1,GPIO.LOW)
             time.sleep(1)

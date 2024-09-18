@@ -52,24 +52,9 @@ def actualizarDatos(payload):
 #actualizarDatos(data_json)
 
 def leerDatosTiempos():
-    response = requests.request("GET", "http://192.168.0.102:5000/api/mecanism", headers=headers)
+    response = requests.request("GET", "http://192.168.0.101:5000/api/mecanism", headers=headers)
     print(response.text)
+
 
 leerDatosTiempos()
-actualizarDatos(data_json)
-#response = requests.request("POST", url, headers=headers, data=payload)
-
-#print(response.text)
-
-def actualizarDatos(payload):
-    response = requests.request("POST", "http://192.168.0.102:5000/api/database", headers=headers, data=payload)
-    print(response.text)
-
 #actualizarDatos(data_json)
-
-def leerDatosTiempos():
-    response = requests.request("GET", "http://192.168.0.102:5000/api/mecanism", headers=headers)
-    print(response.text)
-
-leerDatosTiempos()
-actualizarDatos(data_json)

@@ -34,6 +34,7 @@ class SqliteManager(threading.Thread):
                             saldo_anterior = float(int(aux_data[38:46])/100)
                             self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
                             self.aux_validation_target = self.rs232.n_validations
+                            print(f'transaccion exitosa! CODIGO:{codigo}')
                         except:
                             print("Hubo un error al momento de registrar la transaccion")
 
@@ -120,7 +121,7 @@ class SqliteManager(threading.Thread):
         try:
             with sqlite3.connect('app.db') as conn:
                 transaction_id = self.add_transaction(conn, _data)
-                print(f'Created a TRANSACTION with the id {transaction_id}')
+                print(f'ID: {transaction_id}')
         except sqlite3.Error as e:
             print(e)
     def currentParameters(self):
@@ -139,7 +140,7 @@ class SqliteManager(threading.Thread):
         try:
             with sqlite3.connect('app.db') as conn:
                 parameter_id = self.add_parameter(conn, _data)
-                print(f'Created a PARAMETERS with the id {parameter_id}')
+                print(f'ID: {parameter_id}')
         except sqlite3.Error as e:
             print(e)
 

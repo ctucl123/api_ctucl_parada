@@ -6,39 +6,27 @@ from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
 
 #from audioManager import AudioManager
+#version 3.4
 app = Flask(__name__)
 stop_event = threading.Event()
 
 @app.route('/', methods=['GET', 'POST'])
-def helloworld():
+def home():
     result = None
     if request.method == 'POST':
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
             estado = gpios.ReadSensor()
             result = f'sensor: {estado}'
-        elif operation == 'ReadFin':
-            estado = gpios.ReadFinCarrera()
-            result = f'sensor: {estado}'
         elif operation == 'generatePass':
-            manager.generarPase()
+            manager.generatePass()
             result = f'Pase generado'
         elif operation == 'TestCerradura1':
-            result = gpios.testCerradura1()
-        elif operation == 'TestCerradura2':
-            result = gpios.testCerradura2()
+            result = gpios.testLock()
         elif operation == 'TestLuzLed':
-            result = gpios.testLuzLed()
-        elif operation == 'TestSpecial':
-            result = manager.generarEspecialPass()
-        elif operation == 'ElectroImanOn':
-            result == gpios.electroImanOn()
-        elif operation == 'ElectroImanOff':
-            result == gpios.electroImanOff()
-        elif operation == 'TestearReles':
-            result == gpios.testearReles()
+            result = gpios.testArrow()
         elif operation == 'ActuadorOff':
-            result == gpios.specialDoorOff()
+            result = gpios.specialDoorOff()
     return render_template('home.html', result=result)
 
 @app.route('/api/rs232', methods=['GET', 'POST'])
@@ -53,45 +41,48 @@ def rs232_Api():
 def mecanism_Api():
     if request.method == 'GET':
         params_mecanism = {
-            "time_puerta_general":manager.time_puerta_general,
-            "time_puerta_especial":manager.time_puerta_especial,
-            "time_open_special":manager.time_open_special,
-            "time_close_special":manager.time_close_special,
+            "time_turnstile":manager.time_turnstile,
+            "time_special_door":manager.time_special_door,
+            "time_open_actuator":manager.time_open_actuator,
+            "time_close_actuator":manager.time_close_actuator,
             "time_delay_turnstile":manager.time_delay_turnstile,
             "time_delay_special":manager.time_delay_special,
+            "place":database.place,
+            "uuid":database.uuid,
+            "lat":database.lat,
+            "lon":database.lon
         }
-        return jsonify({'result':params_mecanism})
+        return jsonify(params_mecanism)
     elif request.method == 'POST':
         json_data = request.get_json()
         if not json_data:
             return jsonify({"error": "No se recibió JSON"}), 400
-        if json_data['operation'] == 'ReadSensor':
+        if json_data['operation'] == 'read_sensor':
             result = gpios.ReadSensor()
-        elif json_data['operation'] == 'ReadFin':
-            result = gpios.ReadFinCarrera()
-        elif json_data['operation'] == 'generatePass':
-            manager.generarPase()
+        elif json_data['operation'] == 'read_serial':
+            result = rs232.getData()
+        elif json_data['operation'] == 'generate_normal_pass':
+            manager.generatePass()
             result = 'Pase Generado'
-        elif json_data['operation'] == 'TestCerradura1':
-            result = gpios.testCerradura1()
-        elif json_data['operation'] == 'TestCerradura2':
-            result = gpios.testCerradura2()
-        elif json_data['operation'] == 'TestLuzLed':
-            result = gpios.testLuzLed()
-        elif json_data['operation'] == 'TestSpecial':
-            result = manager.generarEspecialPass()
-        elif json_data['operation'] == 'ElectroImanOn':
-            result = gpios.electroImanOn()
-        elif json_data['operation'] == 'ElectroImanOff':
-            result = gpios.electroImanOff()
-        elif json_data['operation'] == 'TestearReles':
-            result = gpios.testearReles()
-        elif json_data['operation'] == 'ActuadorOff':
-            result = gpios.specialDoorOff()
-        elif json_data['operation'] == 'OpenSpecial':
+        elif json_data['operation'] == 'test_lock':
+            gpios.testLock()
+            result = "Cerradura 1 Testeada"
+        elif json_data['operation'] == 'test_arrow':
+            gpios.testArrow()
+            result = "Luz Led Testeada"
+        elif json_data['operation'] == 'generate_special_pass':
+            manager.generateSpecialPass()
+            result = "Pase Especial Generado"
+        elif json_data['operation'] == 'test_relay':
+            gpios.testRelay()
+            result = "Testeo de Reles"
+        elif json_data['operation'] == 'actuador_off':
+            gpios.specialDoorOff()
+            result = "puerta especial Apagada"
+        elif json_data['operation'] == 'open_special_door':
             gpios.specialDoorOpen()
             result = "puerta especial abriendose !!!!"
-        elif json_data['operation'] == 'CloseSpecial':
+        elif json_data['operation'] == 'close_special_door':
             gpios.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
         return jsonify({'result':result})
@@ -99,7 +90,7 @@ def mecanism_Api():
         return 'bad request!', 400
     
 
-
+    
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
@@ -122,10 +113,10 @@ def db_Api():
                      params['time_delay_special'],params['date'],params['uuid'],
                      params['lat'],params['lon']
                      )
-            manager.time_puerta_general = params['time_turnstile']
-            manager.time_puerta_especial = params['time_special_door']
-            manager.time_open_special = params['time_open_actuator']
-            manager.time_close_special = params['time_close_actuator']
+            manager.time_turnstile = params['time_turnstile']
+            manager.time_special_door = params['time_special_door']
+            manager.time_open_actuator = params['time_open_actuator']
+            manager.time_close_actuator = params['time_close_actuator']
             manager.time_delay_turnstile = params['time_delay_turnstile']
             manager.time_delay_special = params['time_delay_special']
             database.uuid = params['uuid']
@@ -134,9 +125,12 @@ def db_Api():
             database.lon = params['lon']
             database.insert_parameter(_data)
         except:
-            return jsonify({"error": "No se recibió JSON Adecuadamente"}), 400
+            return jsonify({"message": "No se recibió JSON Adecuadamente"}), 400
         
-        return jsonify({"mensaje": "Datos recibidos", "datos": params}), 200
+        return jsonify({"message": "Datos recibidos"}), 200
+    
+
+
 
 
 @app.route("/datos")
@@ -145,26 +139,26 @@ def datos():
 
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
-    manager = Manager(stop_event=stop_event,rs232=rs232) 
+    manager = Manager(stop_event=stop_event,rs232=rs232)
+    gpios = GpiosManager()
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
     init_params = database.currentParameters()
     if init_params != None:
-        manager.time_puerta_general = init_params[2]
-        manager.time_puerta_especial = init_params[5]
-        manager.time_open_special = init_params[3]
-        manager.time_close_special = init_params[4]
+        manager.time_turnstile = init_params[2]
+        manager.time_special_door = init_params[5]
+        manager.time_open_actuator = init_params[3]
+        manager.time_close_actuator = init_params[4]
         manager.time_delay_turnstile = init_params[6]
         manager.time_delay_special = init_params[7]
         database.uuid = init_params[9]
         database.place = init_params[1]
         database.lat = init_params[10]
         database.lon = init_params[11]
-    # audio = AudioManager(stop_event=stop_event,rs232=rs232)
-    gpios = GpiosManager()
     rs232.start()
     manager.start()
     database.start()
     # audio.start()
+
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
     finally:
