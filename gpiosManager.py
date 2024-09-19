@@ -86,7 +86,7 @@ class GpiosManager():
 
 
     def testRelay(self):
-        for i in range(3):
+        for i in range(1):
             GPIO.output(self.cerradura1,GPIO.LOW)
             time.sleep(1)
             GPIO.output(self.electroiman,GPIO.LOW)
