@@ -27,6 +27,10 @@ def home():
             result = gpios.testArrow()
         elif operation == 'ActuadorOff':
             result = gpios.specialDoorOff()
+        elif operation == 'TestRelay':
+            result = gpios.testRelay()
+        else:
+            result = f'Error Operacion No existente: {operation}'
     return render_template('home.html', result=result)
 
 @app.route('/api/rs232', methods=['GET', 'POST'])
@@ -85,6 +89,8 @@ def mecanism_Api():
         elif json_data['operation'] == 'close_special_door':
             gpios.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
+        else:
+            result = f'Error Operacion No existente:'
         return jsonify({'result':result})
     else:
         return 'bad request!', 400

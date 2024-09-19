@@ -29,6 +29,15 @@ class GpiosManager():
         # declaracion de entradas
         GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #inicializacion:
+        GPIO.output(self.pin_libre3,GPIO.HIGH)
+        GPIO.output(self.pin_libre2,GPIO.HIGH)
+        GPIO.output(self.pin_libre1,GPIO.HIGH)
+        GPIO.output(self.semaforo,GPIO.HIGH)
+        GPIO.output(self.actuador_down,GPIO.HIGH)
+        GPIO.output(self.actuador_up,GPIO.HIGH)
+        GPIO.output(self.electroiman,GPIO.HIGH)
+        GPIO.output(self.cerradura1,GPIO.HIGH)
        
         
     def turnstileOpen(self):
