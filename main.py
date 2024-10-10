@@ -6,7 +6,7 @@ from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
 
 #from audioManager import AudioManager
-#version 3.4
+#version 3.6
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -30,7 +30,7 @@ def home():
         elif operation == 'TestRelay':
             result = gpios.testRelay()
         else:
-            result = f'Error Operacion No existente: {operation}'
+            result = f'Error Operacion No existente'
     return render_template('home.html', result=result)
 
 @app.route('/api/rs232', methods=['GET', 'POST'])
@@ -100,9 +100,13 @@ def mecanism_Api():
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
-        operation = request.get_json()
-        if operation['operation'] == "transactions":
+        operation = request.args.get('operation')
+        if operation == "transactions":
             return  database.get_transactions()
+        elif operation == "last_transactions":
+            result = database.get_last_transactions()
+            print(result)
+            return  jsonify({'result':result})
         elif operation['operation'] == "parameters":
             return database.get_parameters()
         else:
