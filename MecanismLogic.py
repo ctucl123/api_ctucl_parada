@@ -6,8 +6,9 @@ import subprocess
 #version 1.1
 
 doors =  GpiosManager()
-ingreso= "sounds/ingreso.wav"
-retorno= "sounds/retorno.wav"
+ingreso= "sounds/ingresoH.wav"
+retorno= "sounds/retornoH.wav"
+cerrado= "sounds/cerradoH.wav"
 def timer(target_time,delay):
     if doors.ReadSensor() == True:
         doors.turnstileOpen()
@@ -26,6 +27,10 @@ def timer(target_time,delay):
                         break
                 if doors.ReadSensor():
                     doors.turnstileBlock()
+                    try:
+                        subprocess.run(["aplay",cerrado], check=True)
+                    except Exception as e:
+                        print("Error audio")
                     time.sleep(delay)
                     break
             time.sleep(0.1)
@@ -50,6 +55,10 @@ def timer(target_time,delay):
                     time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
                 if doors.ReadSensor():
                     doors.turnstileBlock()
+                    try:
+                        subprocess.run(["aplay",cerrado], check=True)
+                    except Exception as e:
+                        print("Error audio")
                     time.sleep(delay)
                     break
             time.sleep(0.1)
