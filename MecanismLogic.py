@@ -18,14 +18,14 @@ def timer(target_time,delay):
         except Exception as e:
             print("Error audio")
         while time.time() - inicio < target_time:
-            if doors.ReadSensor() == 0: 
+            if doors.ReadSensor45() == 0: 
                 timeaux = time.time()
-                while doors.ReadSensor() == False:
+                while doors.ReadSensor45() == False:
                     time.sleep(0.1) 
                     if time.time() - timeaux >= target_time:
                         doors.turnstileBlock()
                         break
-                if doors.ReadSensor():
+                if doors.ReadSensor45():
                     doors.turnstileBlock()
                     try:
                         subprocess.run(["aplay",cerrado], check=True)

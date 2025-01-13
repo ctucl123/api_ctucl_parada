@@ -15,7 +15,7 @@ class GpiosManager():
         self.pin_libre2 = 24
         self.pin_libre3 = 23
         # pines de entradas
-        self.fin_carrera = 16
+        self.sensor_45 = 16
         self.sensor = 26
         # declaracion de salidas
         GPIO.setup(self.cerradura1, GPIO.OUT)
@@ -28,7 +28,7 @@ class GpiosManager():
         GPIO.setup(self.pin_libre3, GPIO.OUT)
         # declaracion de entradas
         GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.sensor_45, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         #inicializacion:
         GPIO.output(self.pin_libre3,GPIO.HIGH)
         GPIO.output(self.pin_libre2,GPIO.HIGH)
@@ -82,7 +82,8 @@ class GpiosManager():
     
     def ReadSensor(self):
         return bool(GPIO.input(self.sensor))
-    
+    def ReadSensor45(self):
+        return bool(GPIO.input(self.sensor_45))
 
 
     def testRelay(self):
