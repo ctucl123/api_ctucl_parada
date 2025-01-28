@@ -41,12 +41,12 @@ class GpiosManager():
        
         
     def turnstileOpen(self):
-        GPIO.output(self.cerradura1, GPIO.HIGH)  # Activar la cerradura 1 # Desactivar la cerradura 2
-        GPIO.output(self.semaforo, GPIO.HIGH) 
+        GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1 # Desactivar la cerradura 2
+        GPIO.output(self.semaforo, GPIO.LOW) 
         return "puerta general abierta" 
     def turnstileBlock(self):
-        GPIO.output(self.cerradura1, GPIO.LOW)
-        GPIO.output(self.semaforo, GPIO.LOW)
+        GPIO.output(self.cerradura1, GPIO.HIGH)
+        GPIO.output(self.semaforo, GPIO.HIGH)
         return "puerta general bloqueada" 
     
     def testLock(self):
