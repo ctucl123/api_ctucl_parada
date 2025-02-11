@@ -94,6 +94,8 @@ class GpiosManager():
     
     def ReadSensor(self):
         return bool(wiringpi.digitalRead(self.sensor))
+    def ReadSensor45(self):
+        return bool(wiringpi.digitalRead(self.sensor_45))
     
     def electroImanOn(self):
         wiringpi.digitalWrite(self.electroiman,GPIO.LOW)
