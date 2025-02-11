@@ -33,10 +33,10 @@ class GpiosManager():
         wiringpi.pinMode(self.pin_libre3, GPIO.OUTPUT)
         # declaracion de entradas
         wiringpi.pinMode(self.sensor, wiringpi.GPIO.INPUT)
-        wiringpi.pinMode(self.fin_carrera, wiringpi.GPIO.INPUT)
+        wiringpi.pinMode(self.sensor_45, wiringpi.GPIO.INPUT)
 
         wiringpi.pullUpDnControl(self.sensor, wiringpi.GPIO.PUD_UP)
-        wiringpi.pullUpDnControl(self.fin_carrera, wiringpi.GPIO.PUD_UP)
+        wiringpi.pullUpDnControl(self.sensor_45, wiringpi.GPIO.PUD_UP)
         #inicializacion
         wiringpi.digitalWrite(self.pin_libre3,GPIO.HIGH)
         wiringpi.digitalWrite(self.pin_libre2,GPIO.HIGH)
@@ -95,8 +95,6 @@ class GpiosManager():
     def ReadSensor(self):
         return bool(wiringpi.digitalRead(self.sensor))
     
-    def ReadFinCarrera(self):
-        return bool(wiringpi.digitalRead(self.fin_carrera))
     def electroImanOn(self):
         wiringpi.digitalWrite(self.electroiman,GPIO.LOW)
         return 'electro iman activado'
