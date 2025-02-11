@@ -4,7 +4,7 @@ from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
-
+#from gpiosManagerOrange import GpiosManager
 #from audioManager import AudioManager
 #version 3.6
 app = Flask(__name__)
