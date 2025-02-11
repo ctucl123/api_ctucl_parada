@@ -1,4 +1,5 @@
-from gpiosManager import GpiosManager
+#from gpiosManager import GpiosManager
+from gpiosManagerOrange import GpiosManager
 import threading
 import time
 import subprocess
