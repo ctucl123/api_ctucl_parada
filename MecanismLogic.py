@@ -15,7 +15,7 @@ def timer(target_time,delay):
         doors.turnstileOpen()
         inicio = time.time()
         try:
-            subprocess.run(["aplay -D hw:2,0",ingreso], check=True)
+            subprocess.run(["aplay",ingreso], check=True)
         except Exception as e:
             print("Error audio")
         while time.time() - inicio < target_time:
@@ -29,7 +29,7 @@ def timer(target_time,delay):
                 if doors.ReadSensor45():
                     doors.turnstileBlock()
                     try:
-                        subprocess.run(["aplay -D hw:2,0",cerrado], check=True)
+                        subprocess.run(["aplay",cerrado], check=True)
                     except Exception as e:
                         print("Error audio")
                     time.sleep(delay)
@@ -39,14 +39,14 @@ def timer(target_time,delay):
     elif doors.ReadSensor()==False:
         doors.turnstileBlock()
         try:
-            subprocess.run(["aplay -D hw:2,0", retorno], check=True)
+            subprocess.run(["aplay", retorno], check=True)
         except Exception as e:
             print("Error audio")
         while doors.ReadSensor() == False:  # Esperar hasta que el sensor sea True
             time.sleep(0.1)
         doors.turnstileOpen()
         try:
-            subprocess.run(["aplay -D hw:2,0", ingreso], check=True)
+            subprocess.run(["aplay", ingreso], check=True)
         except Exception as e:
             print("Error audio")
         inicio = time.time()
@@ -57,7 +57,7 @@ def timer(target_time,delay):
                 if doors.ReadSensor():
                     doors.turnstileBlock()
                     try:
-                        subprocess.run(["aplay -D hw:2,0",cerrado], check=True)
+                        subprocess.run(["aplay",cerrado], check=True)
                     except Exception as e:
                         print("Error audio")
                     time.sleep(delay)
