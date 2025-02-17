@@ -104,6 +104,12 @@ def audio_api():
             return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
         except Exception as e:
             abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "warning_sound":
+        try:
+            audio_manager.warning_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
 
 
 

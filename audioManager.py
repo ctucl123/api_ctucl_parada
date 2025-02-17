@@ -12,6 +12,7 @@ paciencia = "sounds/pacienciaH.wav"
 ###
 monitoreo = "sounds/monitoreo.wav"
 slogan = "sounds/lema.wav"
+advertencia = "sounds/advertenciaH.wav"
 class AudioManager:
     def __init__(self):
         super().__init__()
@@ -51,6 +52,10 @@ class AudioManager:
 
     def ctucl_slogan(self):
         thread = threading.Thread(target=self._play_sound, args=(slogan,))
+        thread.start()
+
+    def warning_sound(self):
+        thread = threading.Thread(target=self._play_sound, args=(advertencia,))
         thread.start()
     
 
