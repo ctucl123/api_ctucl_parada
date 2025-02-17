@@ -27,6 +27,8 @@ def timer(target_time,delay):
                         doors.turnstileBlock()
                         break
                 if doors.ReadSensor45():
+                    while doors.ReadSensor == False:
+                        time.sleep(0.1) 
                     doors.turnstileBlock()
                     try:
                         subprocess.run(["aplay",cerrado], check=True)
