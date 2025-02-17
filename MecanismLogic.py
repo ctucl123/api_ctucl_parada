@@ -10,9 +10,6 @@ import subprocess
 
 doors =  GpiosManager()
 audio_manager = AudioManager()
-ingreso= "sounds/ingresoH.wav"
-retorno= "sounds/retornoH.wav"
-cerrado= "sounds/cerradoH.wav"
 def timer(target_time,delay):
     if doors.ReadSensor() == True:
         doors.turnstileOpen()
