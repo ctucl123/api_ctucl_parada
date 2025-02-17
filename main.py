@@ -170,7 +170,7 @@ if __name__ == "__main__":
     # audio.start()
 
     try:
-        app.run(host='0.0.0.0', port=5000,use_reloader=False)
+        app.run(host='10.10.10.253', port=5000,use_reloader=False)
     finally:
         stop_event.set()
         rs232.join()
