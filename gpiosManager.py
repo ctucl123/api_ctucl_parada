@@ -37,7 +37,7 @@ class GpiosManager():
         GPIO.output(self.actuador_down,GPIO.HIGH)
         GPIO.output(self.actuador_up,GPIO.HIGH)
         GPIO.output(self.electroiman,GPIO.HIGH)
-        GPIO.output(self.cerradura1,GPIO.LOW)
+        GPIO.output(self.cerradura1,GPIO.HIGH)
        
         
     def turnstileOpen(self):
@@ -50,9 +50,9 @@ class GpiosManager():
         return "puerta general bloqueada" 
     
     def testLock(self):
-        GPIO.output(self.cerradura1, GPIO.HIGH)
-        time.sleep(2)
         GPIO.output(self.cerradura1, GPIO.LOW)
+        time.sleep(2)
+        GPIO.output(self.cerradura1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 1 testeada con exito'
     def testArrow(self):
