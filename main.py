@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request,jsonify
+from flask import Flask, request, jsonify, abort,render_template
 import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
+from audioManager import AudioManager
 #from gpiosManagerOrange import GpiosManager
 #from audioManager import AudioManager
 #version 3.6
@@ -40,6 +41,73 @@ def rs232_Api():
         if operation['operation'] == "validations":
             return  jsonify({"validations":rs232.n_validations})
         return
+    
+@app.route('/api/audio', methods=['POST'])
+def rs232_Api():
+    if not request.is_json:
+        abort(400, description="Se esperaba un JSON válido")
+
+    data = request.get_json()
+    if 'operation' not in data:
+        abort(400, description="Falta el parámetro 'operation' en la solicitud")
+    if data['operation'] == "open_sound":
+        try:
+            audio_manager.open_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "close_sound":
+        try:
+            audio_manager.close_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "open_special_sound":
+        try:
+            audio_manager.open_special_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "close_special_sound":
+        try:
+            audio_manager.close_special_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "blocked_door_sound":
+        try:
+            audio_manager.blocked_door_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "maintenance_sound":
+        try:
+            audio_manager.maintenance_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "patience_sound":
+        try:
+            audio_manager.patience_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "monitoring_sound":
+        try:
+            audio_manager.monitoring_sound()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+    elif data['operation'] == "ctucl_slogan":
+        try:
+            audio_manager.ctucl_slogan()
+            return jsonify({"message": "Operación realizada con éxito", "status": 200}), 200
+        except Exception as e:
+            abort(500, description=f"Error al ejecutar la operación: {str(e)}")
+
+
+
+    abort(400, description="Operación no válida")
 
 @app.route('/api/mecanism', methods=['GET', 'POST'])
 def mecanism_Api():
@@ -152,6 +220,7 @@ if __name__ == "__main__":
     manager = Manager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
+    audio_manager = AudioManager()
     init_params = database.currentParameters()
     if init_params != None:
         manager.time_turnstile = init_params[2]
@@ -167,7 +236,7 @@ if __name__ == "__main__":
     rs232.start()
     manager.start()
     database.start()
-    # audio.start()
+
 
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)

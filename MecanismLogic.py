@@ -40,17 +40,11 @@ def timer(target_time,delay):
         doors.turnstileBlock()
     elif doors.ReadSensor()==False:
         doors.turnstileBlock()
-        try:
-            subprocess.run(["aplay", retorno], check=True)
-        except Exception as e:
-            print("Error audio")
+        audio_manager.blocked_door_sound()
         while doors.ReadSensor() == False:  # Esperar hasta que el sensor sea True
             time.sleep(0.1)
         doors.turnstileOpen()
-        try:
-            subprocess.run(["aplay", ingreso], check=True)
-        except Exception as e:
-            print("Error audio")
+        audio_manager.open_sound()
         inicio = time.time()
         while time.time() - inicio < target_time:
             if doors.ReadSensor() == 0:  # Esperar a que el sensor cambie a 0
@@ -58,10 +52,7 @@ def timer(target_time,delay):
                     time.sleep(0.1)  # Esperar a que el sensor vuelva a 1
                 if doors.ReadSensor():
                     doors.turnstileBlock()
-                    try:
-                        subprocess.run(["aplay",cerrado], check=True)
-                    except Exception as e:
-                        print("Error audio")
+                    audio_manager.close_sound()
                     time.sleep(delay)
                     break
             time.sleep(0.1)
@@ -69,10 +60,12 @@ def timer(target_time,delay):
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     time.sleep(delay)
+    audio_manager.open_special_sound()
     doors.specialDoorOpen()
     time.sleep(timer_on)
     doors.specialDoorOff()
     time.sleep(target_time)
+    audio_manager.close_special_sound()
     doors.specialDoorClose() 
     time.sleep(timer_off)
     doors.specialDoorOff()
