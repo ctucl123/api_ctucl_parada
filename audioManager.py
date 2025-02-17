@@ -1,57 +1,30 @@
-
-import time
 import subprocess
-import datetime
 import threading
 
-audio_file_paths = [
-           "sounds/estudiante.wav",
-             "sounds/lema.wav",
-             "sounds/loja_ciudad_cultura.wav",
-             "sounds/monitoreo.wav",
-             "sounds/recargar.wav",
-                    ]
+open_door = "sounds/ingresoH.wav"
+door_blocked = "sounds/retornoH.wav"
+close_door = "sounds/cerradoH.wav"
 
-adelante ="sounds/adelante_porfavor.wav"
-
-
-class AudioManager(threading.Thread):
-    def __init__(self, stop_event,rs232):
+class AudioManager:
+    def __init__(self):
         super().__init__()
-        self.rs232 = rs232
-        self.stop_event = stop_event
-        self.path_target = 0
-        self.long_path = len(audio_file_paths) -1
-        self.flag_door = False
-    def run(self):
-        while not self.stop_event.is_set():
-            with self.rs232.lock:
-                if self.rs232.validation:
-                    print("Adelante Porfavor")
-                    self.audioReproduce(adelante)
-                else:                
-                    fecha =  datetime.datetime.now()
-                    hora = int(fecha.hour)
-                    if hora < 18 and hora > 6:
-                        self.audioReproduce(audio_file_paths[self.path_target])
-                        if self.path_target >=self.long_path:
-                            self.path_target = 0
-                        else:
-                            path_target += 1
-                        time.sleep(120) #cambiar este time sleep por un temporizador
-                    
-                
-    def AdelantePorfavor(self):
-        self.audioReproduce(adelante)
-        return 'reproduciendo audio adelante'
 
-    def audioReproduce(self,path):
+    def open_sound(self):
+        thread = threading.Thread(target=self._play_sound, args=(open_door,))
+        thread.start()
+
+    def close_sound(self):
+        thread = threading.Thread(target=self._play_sound, args=(close_door,))
+        thread.start()
+
+    def blocked_door_sound(self):
+        thread = threading.Thread(target=self._play_sound, args=(door_blocked,))
+        thread.start()
+
+    def _play_sound(self, path):
         try:
             subprocess.run(["aplay", path], check=True)
-            print("Reproducción de audio completada.")
+            print(f"Reproducción de audio completada: {path}")
         except subprocess.CalledProcessError as e:
-            print(f"Error al reproducir el audio: {e}")
-        except FileNotFoundError:
-            print("El archivo de audio especificado no se encontró.")
-        except Exception as e:
-            print(f"Ocurrió un error inesperado: {e}")
+            print(f"Error al reproducir el audio {path}: {e}")
+

@@ -1,12 +1,15 @@
 from gpiosManager import GpiosManager
 #from gpiosManagerOrange import GpiosManager
+from audioManager import AudioManager
 import threading
 import time
 import subprocess
 
+
 #version 1.1
 
 doors =  GpiosManager()
+audio_manager = AudioManager()
 ingreso= "sounds/ingresoH.wav"
 retorno= "sounds/retornoH.wav"
 cerrado= "sounds/cerradoH.wav"
@@ -14,10 +17,7 @@ def timer(target_time,delay):
     if doors.ReadSensor() == True:
         doors.turnstileOpen()
         inicio = time.time()
-        try:
-            subprocess.run(["aplay",ingreso], check=True)
-        except Exception as e:
-            print("Error audio")
+        audio_manager.open_sound()
         while time.time() - inicio < target_time:
             if doors.ReadSensor45() == 0: 
                 timeaux = time.time()
@@ -28,12 +28,12 @@ def timer(target_time,delay):
                         break
                 if doors.ReadSensor45():
                     while doors.ReadSensor == False:
-                        time.sleep(0.1) 
+                        time.sleep(0.1)
+                        if time.time() - timeaux >= target_time:
+                            doors.turnstileBlock()
+                            break 
                     doors.turnstileBlock()
-                    try:
-                        subprocess.run(["aplay",cerrado], check=True)
-                    except Exception as e:
-                        print("Error audio")
+                    audio_manager.close_sound()
                     time.sleep(delay)
                     break
             time.sleep(0.1)
