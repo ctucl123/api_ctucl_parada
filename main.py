@@ -43,7 +43,7 @@ def rs232_Api():
         return
     
 @app.route('/api/audio', methods=['POST'])
-def rs232_Api():
+def audio_api():
     if not request.is_json:
         abort(400, description="Se esperaba un JSON válido")
 
