@@ -24,7 +24,7 @@ def timer(target_time,delay):
                         doors.turnstileBlock()
                         break
                 if doors.ReadSensor45():
-                    while doors.ReadSensor == False:
+                    while doors.ReadSensor() == False:
                         time.sleep(0.1)
                         if time.time() - timeaux >= target_time:
                             doors.turnstileBlock()
