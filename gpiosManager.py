@@ -11,7 +11,7 @@ class GpiosManager():
         self.actuador_up = 21
         self.actuador_down = 20
         self.semaforo = 27
-        self.pin_libre1 = 17
+        self.validador = 17
         self.pin_libre2 = 24
         self.pin_libre3 = 23
         # pines de entradas
@@ -23,7 +23,7 @@ class GpiosManager():
         GPIO.setup(self.actuador_up, GPIO.OUT)
         GPIO.setup(self.actuador_down, GPIO.OUT)
         GPIO.setup(self.semaforo, GPIO.OUT)
-        GPIO.setup(self.pin_libre1, GPIO.OUT)
+        GPIO.setup(self.validador, GPIO.OUT)
         GPIO.setup(self.pin_libre2, GPIO.OUT)
         GPIO.setup(self.pin_libre3, GPIO.OUT)
         # declaracion de entradas
@@ -32,7 +32,7 @@ class GpiosManager():
         #inicializacion:
         GPIO.output(self.pin_libre3,GPIO.HIGH)
         GPIO.output(self.pin_libre2,GPIO.HIGH)
-        GPIO.output(self.pin_libre1,GPIO.HIGH)
+        GPIO.output(self.validador,GPIO.LOW)
         GPIO.output(self.semaforo,GPIO.HIGH)
         GPIO.output(self.actuador_down,GPIO.HIGH)
         GPIO.output(self.actuador_up,GPIO.HIGH)
@@ -120,10 +120,18 @@ class GpiosManager():
             time.sleep(1)
             GPIO.output(self.cerradura1,GPIO.HIGH)
             time.sleep(1)
-
-        
         return 'Test Terminado'
     
+    def validador_on(self):
+        GPIO.output(self.validador,GPIO.HIGH)
+    
+    def validador_off(self):
+        GPIO.output(self.validador,GPIO.LOW)
+
+    def restart_validator(self):
+        GPIO.output(self.validador,GPIO.LOW)
+        time.sleep(5)
+        GPIO.output(self.validador,GPIO.HIGH)
     
 
         

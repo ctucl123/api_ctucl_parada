@@ -42,6 +42,19 @@ def rs232_Api():
             return  jsonify({"validations":rs232.n_validations})
         return
     
+@app.route('/api/validador', methods=['GET', 'POST'])
+def rs232_Api():
+    if request.method == 'POST':
+        operation = request.get_json()
+        if operation['operation'] == "restart":
+            manager.maintenance = False
+            gpios.restart_validator()
+            return  jsonify({"message":"reiniciado con exito"})
+        elif operation['operation'] == "maintenance":
+            manager.maintenance = True
+            return  jsonify({"message":"modo mantenimiento con exito"})
+        return
+
 @app.route('/api/audio', methods=['POST'])
 def audio_api():
     if not request.is_json:

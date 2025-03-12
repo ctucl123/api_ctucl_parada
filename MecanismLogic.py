@@ -81,6 +81,7 @@ class Manager(threading.Thread):
         self.time_delay_special = 1
         self.activatePass = 0
         self.specialPass = 0
+        self.maintenance = False
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
@@ -111,7 +112,12 @@ class Manager(threading.Thread):
                         elif self.rs232.data[18] == '3':
                             temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
-                            temporizador_special.join()             
+                            temporizador_special.join()
+            
+            while(self.maintenance):
+                audio_manager.maintenance_sound()
+                doors.validador_off()
+                time.sleep(4)             
             time.sleep(0.1)
     def generatePass(self):
         self.activatePass += 1

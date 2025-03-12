@@ -15,7 +15,7 @@ class GpiosManager():
         self.actuador_up = 27
         self.actuador_down = 26
         self.semaforo = 7
-        self.pin_libre1 = 5
+        self.validador = 5
         self.pin_libre2 = 9
         self.pin_libre3 = 10
         # pines de entradas
@@ -28,7 +28,7 @@ class GpiosManager():
         wiringpi.pinMode(self.actuador_up, GPIO.OUTPUT)
         wiringpi.pinMode(self.actuador_down, GPIO.OUTPUT)
         wiringpi.pinMode(self.semaforo, GPIO.OUTPUT)
-        wiringpi.pinMode(self.pin_libre1, GPIO.OUTPUT)
+        wiringpi.pinMode(self.validador, GPIO.OUTPUT)
         wiringpi.pinMode(self.pin_libre2, GPIO.OUTPUT)
         wiringpi.pinMode(self.pin_libre3, GPIO.OUTPUT)
         # declaracion de entradas
@@ -40,7 +40,7 @@ class GpiosManager():
         #inicializacion
         wiringpi.digitalWrite(self.pin_libre3,GPIO.HIGH)
         wiringpi.digitalWrite(self.pin_libre2,GPIO.HIGH)
-        wiringpi.digitalWrite(self.pin_libre1,GPIO.HIGH)
+        wiringpi.digitalWrite(self.validador,GPIO.HIGH)
         wiringpi.digitalWrite(self.semaforo,GPIO.HIGH)
         wiringpi.digitalWrite(self.actuador_down,GPIO.HIGH)
         wiringpi.digitalWrite(self.actuador_up,GPIO.HIGH)
@@ -139,7 +139,18 @@ class GpiosManager():
             time.sleep(1)
             wiringpi.digitalWrite(self.cerradura1,GPIO.HIGH)
             time.sleep(1)
-
-        
         return 'Test Terminado'
+    
+
+    def validador_on(self):
+        wiringpi.digitalWrite(self.validador,GPIO.HIGH)
+    
+    def validador_off(self):
+        wiringpi.digitalWrite(self.validador,GPIO.LOW)
+
+    def restart_validator(self):
+        wiringpi.digitalWrite(self.validador,GPIO.LOW)
+        time.sleep(5)
+        wiringpi.digitalWrite(self.validador,GPIO.HIGH)
+    
     
