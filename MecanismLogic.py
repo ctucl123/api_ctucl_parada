@@ -117,7 +117,7 @@ class Manager(threading.Thread):
             while(self.maintenance):
                 audio_manager.maintenance_sound()
                 doors.validador_off()
-                time.sleep(4)             
+                time.sleep(20)             
             time.sleep(0.1)
     def generatePass(self):
         self.activatePass += 1
