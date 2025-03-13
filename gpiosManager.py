@@ -32,27 +32,27 @@ class GpiosManager():
         #inicializacion:
         GPIO.output(self.pin_libre3,GPIO.HIGH)
         GPIO.output(self.pin_libre2,GPIO.HIGH)
-        GPIO.output(self.validador,GPIO.LOW)
+        GPIO.output(self.validador,GPIO.HIGH)
         GPIO.output(self.semaforo,GPIO.HIGH)
         GPIO.output(self.actuador_down,GPIO.HIGH)
         GPIO.output(self.actuador_up,GPIO.HIGH)
         GPIO.output(self.electroiman,GPIO.HIGH)
-        GPIO.output(self.cerradura1,GPIO.LOW)
+        GPIO.output(self.cerradura1,GPIO.HIGH)
        
         
     def turnstileOpen(self):
-        GPIO.output(self.cerradura1, GPIO.HIGH)  # Activar la cerradura 1 # Desactivar la cerradura 2
-        GPIO.output(self.semaforo, GPIO.HIGH) 
+        GPIO.output(self.cerradura1, GPIO.LOW)
+        GPIO.output(self.semaforo, GPIO.LOW) 
         return "puerta general abierta" 
     def turnstileBlock(self):
-        GPIO.output(self.cerradura1, GPIO.LOW)
-        GPIO.output(self.semaforo, GPIO.LOW)
+        GPIO.output(self.cerradura1, GPIO.HIGH)
+        GPIO.output(self.semaforo, GPIO.HIGH)
         return "puerta general bloqueada" 
     
     def testLock(self):
-        GPIO.output(self.cerradura1, GPIO.HIGH)
-        time.sleep(2)
         GPIO.output(self.cerradura1, GPIO.LOW)
+        time.sleep(2)
+        GPIO.output(self.cerradura1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 1 testeada con exito'
     def testArrow(self):
@@ -86,42 +86,6 @@ class GpiosManager():
         return bool(GPIO.input(self.sensor_45))
 
 
-    def testRelay(self):
-        for i in range(1):
-            GPIO.output(self.cerradura1,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.actuador_up,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.actuador_down,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.semaforo,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre1,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre2,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre3,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre3,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.pin_libre2,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.pin_libre1,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.semaforo,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.actuador_down,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.actuador_up,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.cerradura1,GPIO.HIGH)
-            time.sleep(1)
-        return 'Test Terminado'
-    
     def validador_on(self):
         GPIO.output(self.validador,GPIO.HIGH)
     
