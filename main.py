@@ -42,8 +42,8 @@ def rs232_Api():
             return  jsonify({"validations":rs232.n_validations})
         return
     
-@app.route('/api/validador', methods=['GET', 'POST'])
-def rs232_Api():
+@app.route('/api/events', methods=['GET', 'POST'])
+def events_api():
     if request.method == 'POST':
         operation = request.get_json()
         if operation['operation'] == "restart":
