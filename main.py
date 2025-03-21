@@ -5,12 +5,15 @@ from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
 from audioManager import AudioManager
+from dotenv import load_dotenv
+import os
 #from gpiosManagerOrange import GpiosManager
 #from audioManager import AudioManager
 #version 3.6
 app = Flask(__name__)
 stop_event = threading.Event()
-
+mode = os.getenv("MODE")
+port = os.getenv("USB_PORT")
 @app.route('/', methods=['GET', 'POST'])
 def home():
     result = None
@@ -235,8 +238,8 @@ def datos():
     return rs232.getData()
 
 if __name__ == "__main__":
-    rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyACM0')
-    manager = Manager(stop_event=stop_event,rs232=rs232)
+    rs232 = rs232Comunication( stop_event=stop_event,com=port)
+    manager = Manager(stop_event=stop_event,rs232=rs232,mode=mode)
     gpios = GpiosManager()
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
     audio_manager = AudioManager()

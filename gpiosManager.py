@@ -98,4 +98,11 @@ class GpiosManager():
         GPIO.output(self.validador,GPIO.HIGH)
     
 
-        
+    def doorOpen(self):
+        GPIO.output(self.electroiman, GPIO.HIGH)  
+        GPIO.output(self.semaforo, GPIO.LOW)
+        return "puerta general abierta" 
+    
+    def doorClose(self):
+        GPIO.output(self.electroiman, GPIO.LOW)  
+        GPIO.output(self.semaforo, GPIO.HIGH)

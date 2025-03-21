@@ -6,11 +6,12 @@ import time
 import subprocess
 
 
-#version 1.1
+#version 1.2
 
+#llamada a las clases
 doors =  GpiosManager()
 audio_manager = AudioManager()
-def timer(target_time,delay):
+def timer_turnstile(target_time,delay):
     if doors.ReadSensor() == True:
         doors.turnstileOpen()
         inicio = time.time()
@@ -53,7 +54,22 @@ def timer(target_time,delay):
                     time.sleep(delay)
                     break
             time.sleep(0.1)
-        doors.turnstileBlock()   
+        doors.turnstileBlock()
+
+def timer_electromagnet(target_time,delay):
+    if doors.ReadSensor() == True:
+        doors.doorOpen()
+    inicio = time.time()
+    while time.time() - inicio < target_time:
+        if doors.ReadSensor() == False:
+            timeaux = time.time()
+            while doors.ReadSensor() == False:
+                time.sleep(delay)
+                if time.time() - timeaux >= target_time:
+                    doors.doorClose()
+                    break
+            doors.doorClose() 
+            break    
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     time.sleep(delay)
@@ -69,7 +85,7 @@ def timerSpecialDoor(target_time,timer_on,timer_off,delay):
 
 
 class Manager(threading.Thread):
-    def __init__(self,rs232, stop_event):
+    def __init__(self,rs232, stop_event,mode):
         super().__init__()
         self.rs232 = rs232
         self.stop_event = stop_event
@@ -82,12 +98,17 @@ class Manager(threading.Thread):
         self.activatePass = 0
         self.specialPass = 0
         self.maintenance = False
+        self.mode=mode
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.activatePass >0:
-                    temporizador_thread = threading.Thread(target=timer,args=(self.time_turnstile,self.time_delay_turnstile))
-                    temporizador_thread.start()
+                    if self.mode =="NORMAL":
+                        temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
+                        temporizador_thread.start()
+                    else:
+                        temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
+                        temporizador_thread.start()
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:
                         self.activatePass = 0
@@ -106,9 +127,14 @@ class Manager(threading.Thread):
                 else:    
                     if self.rs232.validation:
                         if self.rs232.data[18] != '3':
-                            temporizador_thread = threading.Thread(target=timer,args=(self.time_turnstile,self.time_delay_turnstile))
-                            temporizador_thread.start()
-                            temporizador_thread.join()
+                            if self.mode =="NORMAL":
+                                temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
+                                temporizador_thread.start()
+                                temporizador_thread.join()
+                            else:
+                                temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
+                                temporizador_thread.start()
+                                temporizador_thread.join()
                         elif self.rs232.data[18] == '3':
                             temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
