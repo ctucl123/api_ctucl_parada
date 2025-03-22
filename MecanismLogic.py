@@ -100,6 +100,7 @@ class Manager(threading.Thread):
         self.maintenance = False
         self.mode=mode
     def run(self):
+        reboot_time = time.time()
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.activatePass >0:
@@ -139,7 +140,16 @@ class Manager(threading.Thread):
                             temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
                             temporizador_special.join()
-            
+            if doors.pulsante_1():
+                aux_reboot_time = time.time()
+                p_reboot_time = reboot_time + 3600  # Tiempo límite (reboot_time + 1 hora)
+                if aux_reboot_time >= p_reboot_time:  # Verifica si ha pasado 1 hora
+                    doors.validador_off()
+                    time.sleep(20)
+                    doors.validador_on()
+                    reboot_time = aux_reboot_time 
+
+
             while(self.maintenance):
                 audio_manager.maintenance_sound()
                 doors.validador_off()
