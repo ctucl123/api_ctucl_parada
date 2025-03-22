@@ -105,12 +105,12 @@ class Manager(threading.Thread):
             with self.rs232.lock:
                 if self.activatePass >0:
                     if self.mode =="NORMAL":
-                        temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
                         print("modo normal")
+                        temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
                         temporizador_thread.start()
                     else:
-                        temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
                         print("modo coliseo")
+                        temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
                         temporizador_thread.start()
 
                     aux_pass =  self.activatePass - 1
