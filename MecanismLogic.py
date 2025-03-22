@@ -145,7 +145,7 @@ class Manager(threading.Thread):
                             temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
                             temporizador_special.join()
-            if doors.pulsante_1():
+            if doors.rebootButton():
                 aux_reboot_time = time.time()
                 p_reboot_time = reboot_time + 3600  # Tiempo límite (reboot_time + 1 hora)
                 if aux_reboot_time >= p_reboot_time:  # Verifica si ha pasado 1 hora
