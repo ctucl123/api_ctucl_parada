@@ -238,7 +238,7 @@ def datos():
     return rs232.getData()
 
 if __name__ == "__main__":
-    rs232 = rs232Comunication( stop_event=stop_event,com="/dev/ttyUSB0")
+    rs232 = rs232Comunication( stop_event=stop_event,com="/dev/ttyACM0")
     manager = Manager(stop_event=stop_event,rs232=rs232,mode=mode)
     gpios = GpiosManager()
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
