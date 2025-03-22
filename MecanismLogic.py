@@ -106,10 +106,13 @@ class Manager(threading.Thread):
                 if self.activatePass >0:
                     if self.mode =="NORMAL":
                         temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
+                        print("modo normal")
                         temporizador_thread.start()
                     else:
                         temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
+                        print("modo coliseo")
                         temporizador_thread.start()
+
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:
                         self.activatePass = 0
@@ -129,10 +132,12 @@ class Manager(threading.Thread):
                     if self.rs232.validation:
                         if self.rs232.data[18] != '3':
                             if self.mode =="NORMAL":
+                                print("modo normal")
                                 temporizador_thread = threading.Thread(target=timer_turnstile,args=(self.time_turnstile,self.time_delay_turnstile))
                                 temporizador_thread.start()
                                 temporizador_thread.join()
                             else:
+                                print("modo coliseo")
                                 temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
                                 temporizador_thread.start()
                                 temporizador_thread.join()
