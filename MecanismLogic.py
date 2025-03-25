@@ -12,7 +12,7 @@ import subprocess
 doors =  GpiosManager()
 audio_manager = AudioManager()
 def timer_turnstile(target_time,delay):
-    if doors.ReadSensor() == True:
+    if doors.ReadSensor() == False:
         doors.turnstileOpen()
         inicio = time.time()
         audio_manager.open_sound()
@@ -36,7 +36,7 @@ def timer_turnstile(target_time,delay):
                     break
             time.sleep(0.1)
         doors.turnstileBlock()
-    elif doors.ReadSensor()==False:
+    elif doors.ReadSensor()==True:
         doors.turnstileBlock()
         audio_manager.blocked_door_sound()
         while doors.ReadSensor() == False:  # Esperar hasta que el sensor sea True
@@ -56,20 +56,42 @@ def timer_turnstile(target_time,delay):
             time.sleep(0.1)
         doors.turnstileBlock()
 
+# def timer_electromagnet(target_time,delay):
+#     if doors.ReadSensor() == False:
+#         audio_manager.open_sound()
+#         doors.turnstileOpen()
+#         doors.doorOpen()
+#     inicio = time.time()
+#     while time.time() - inicio < target_time:
+#         if doors.ReadSensor() == True:
+#             timeaux = time.time()
+#             while doors.ReadSensor() == False:
+#                 time.sleep(delay)
+#                 if time.time() - timeaux >= target_time:
+#                     doors.doorClose()
+#                     audio_manager.close_sound()
+#                     break
+#             doors.doorClose() 
+#             break    
 def timer_electromagnet(target_time,delay):
-    if doors.ReadSensor() == True:
+    if doors.ReadSensor() == False:
+        audio_manager.open_sound()
+        doors.turnstileOpen()
         doors.doorOpen()
     inicio = time.time()
-    while time.time() - inicio < target_time:
+    while time.time() - inicio < 8:
         if doors.ReadSensor() == False:
             timeaux = time.time()
             while doors.ReadSensor() == False:
-                time.sleep(delay)
-                if time.time() - timeaux >= target_time:
+                time.sleep(0.1)
+                if time.time() - timeaux >= 8:
                     doors.doorClose()
+                    doors.turnstileBlock()
                     break
-            doors.doorClose() 
-            break    
+            doors.doorClose()
+            doors.turnstileBlock()
+            audio_manager.close_sound() 
+            break   
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     time.sleep(delay)
