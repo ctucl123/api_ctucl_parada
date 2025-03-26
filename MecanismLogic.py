@@ -56,42 +56,46 @@ def timer_turnstile(target_time,delay):
             time.sleep(0.1)
         doors.turnstileBlock()
 
+
+
 # def timer_electromagnet(target_time,delay):
-#     if doors.ReadSensor() == False:
-#         audio_manager.open_sound()
-#         doors.turnstileOpen()
-#         doors.doorOpen()
+#     audio_manager.open_sound()
+#     doors.turnstileOpen()
+#     doors.doorOpen()
 #     inicio = time.time()
-#     while time.time() - inicio < target_time:
-#         if doors.ReadSensor() == True:
+#     counter = 0
+#     while time.time() - inicio < 8:
+#         if doors.ReadSensor() == False:
 #             timeaux = time.time()
 #             while doors.ReadSensor() == False:
-#                 time.sleep(delay)
-#                 if time.time() - timeaux >= target_time:
-#                     doors.doorClose()
-#                     audio_manager.close_sound()
+#                 time.sleep(0.1)
+#                 if time.time() - timeaux >= 8:
 #                     break
-#             doors.doorClose() 
-#             break    
+#             doors.doorClose()
+#             doors.turnstileBlock()
+#             audio_manager.close_sound() 
+#             break   
+
 def timer_electromagnet(target_time,delay):
-    if doors.ReadSensor() == False:
-        audio_manager.open_sound()
-        doors.turnstileOpen()
-        doors.doorOpen()
+    audio_manager.open_sound()
+    doors.turnstileOpen()
+    doors.doorOpen()
     inicio = time.time()
+    counter = 0
     while time.time() - inicio < 8:
-        if doors.ReadSensor() == False:
-            timeaux = time.time()
-            while doors.ReadSensor() == False:
-                time.sleep(0.1)
-                if time.time() - timeaux >= 8:
-                    doors.doorClose()
-                    doors.turnstileBlock()
-                    break
-            doors.doorClose()
-            doors.turnstileBlock()
-            audio_manager.close_sound() 
-            break   
+        time.sleep(0.1)
+        if doors.ReadSensor() == True:
+           counter +=1
+
+        elif counter == 2:
+           doors.doorClose()
+           doors.turnstileBlock()
+           audio_manager.close_sound()
+           break
+    doors.doorClose()
+    doors.turnstileBlock()
+    print(counter)
+
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     time.sleep(delay)
@@ -101,7 +105,7 @@ def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     doors.specialDoorOff()
     time.sleep(target_time)
     audio_manager.close_special_sound()
-    doors.specialDoorClose() 
+    doors.specialDoorClose()
     time.sleep(timer_off)
     doors.specialDoorOff()
 
@@ -134,7 +138,6 @@ class Manager(threading.Thread):
                         print("modo coliseo")
                         temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
                         temporizador_thread.start()
-
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:
                         self.activatePass = 0
@@ -169,14 +172,12 @@ class Manager(threading.Thread):
                             temporizador_special.join()
             if doors.rebootButton():
                 aux_reboot_time = time.time()
-                p_reboot_time = reboot_time + 3600  # Tiempo límite (reboot_time + 1 hora)
-                if aux_reboot_time >= p_reboot_time:  # Verifica si ha pasado 1 hora
+                p_reboot_time = reboot_time + 3600 
+                if aux_reboot_time >= p_reboot_time:
                     doors.validador_off()
                     time.sleep(20)
                     doors.validador_on()
                     reboot_time = aux_reboot_time 
-
-
             while(self.maintenance):
                 audio_manager.maintenance_sound()
                 doors.validador_off()
