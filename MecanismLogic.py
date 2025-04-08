@@ -97,8 +97,8 @@ def timer_electromagnet(target_time):
         if counter >= 2:
            doors.doorClose()
            doors.turnstileBlock()
-           audio_manager.close_sound()
            break
+    audio_manager.close_sound()
     doors.doorClose()
     doors.turnstileBlock()
 
