@@ -33,8 +33,6 @@ def home():
             result = manager.testArrow()
         elif operation == 'ActuadorOff':
             result = manager.specialDoorOff()
-        elif operation == 'TestRelay':
-            result = manager.testRelay()
         else:
             result = f'Error Operacion No existente'
     return render_template('home.html', result=result)
@@ -169,9 +167,6 @@ def mecanism_Api():
         elif json_data['operation'] == 'generate_special_pass':
             manager.generateSpecialPass()
             result = "Pase Especial Generado"
-        elif json_data['operation'] == 'test_relay':
-            manager.testRelay()
-            result = "Testeo de Reles"
         elif json_data['operation'] == 'actuador_off':
             manager.specialDoorOff()
             result = "puerta especial Apagada"

@@ -5,7 +5,7 @@ import threading
 import time
 
 load_dotenv()
-ENVIRONMENT = os.getenv("ENVIRONMENT", "LOCAL")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "RASPBERRY")
 if ENVIRONMENT == "RASPBERRY":
     from gpiosManagerRaspberry import GpiosManager
 elif ENVIRONMENT == "ORANGPI":
@@ -83,25 +83,24 @@ def timer_turnstile(target_time,delay):
 #             audio_manager.close_sound() 
 #             break   
 
-def timer_electromagnet(target_time,delay):
+def timer_electromagnet(target_time):
     audio_manager.open_sound()
     doors.turnstileOpen()
     doors.doorOpen()
     inicio = time.time()
     counter = 0
     while time.time() - inicio < target_time:
-        time.sleep(0.1)
         if doors.ReadSensor() == True:
-           counter +=1
-
-        elif counter >= 2:
+            while doors.ReadSensor() == True:
+                time.sleep(0.1)
+            counter += 1         
+        if counter >= 2:
            doors.doorClose()
            doors.turnstileBlock()
            audio_manager.close_sound()
            break
     doors.doorClose()
     doors.turnstileBlock()
-    print(counter)
 
 
 def timerSpecialDoor(target_time,timer_on,timer_off,delay):
@@ -143,7 +142,7 @@ class Manager(threading.Thread,GpiosManager):
                         temporizador_thread.start()
                     else:
                         print("modo coliseo")
-                        temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
+                        temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,))
                         temporizador_thread.start()
                     aux_pass =  self.activatePass - 1
                     if aux_pass < 0:
@@ -170,7 +169,7 @@ class Manager(threading.Thread,GpiosManager):
                                 temporizador_thread.join()
                             else:
                                 print("modo coliseo")
-                                temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,self.time_delay_turnstile))
+                                temporizador_thread = threading.Thread(target=timer_electromagnet,args=(self.time_turnstile,))
                                 temporizador_thread.start()
                                 temporizador_thread.join()
                         elif self.rs232.data[18] == '3':
@@ -195,8 +194,25 @@ class Manager(threading.Thread,GpiosManager):
     def generateSpecialPass(self):
         self.specialPass += 1
         return "Pase especial con exito"
-
-    
+    def ReadSensor(self):
+        return doors.ReadSensor()
+    def ReadSensor45(self):
+        return doors.ReadSensor45()
+    def testLock(self):
+        doors.testLock()
+    def testArrow(self):
+        doors.testArrow()
+    def restartValidator(self):
+        doors.restart_validator()
+    def specialDoorOff(self):
+        doors.specialDoorOff()
+        return {"msg":"Se cierra puerta especial especial","status":True}
+    def specialDoorOpen(self):
+        doors.specialDoorOpen()
+        return {"msg":"Se abre puerta especial especial","status":True}
+    def specialDoorClose(self):
+        doors.specialDoorClose()
+        return {"msg":"Se cierra puerta especial especial","status":True}
     
 
     
