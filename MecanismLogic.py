@@ -7,7 +7,7 @@ import time
 load_dotenv()
 ENVIRONMENT = os.getenv("ENVIRONMENT", "LOCAL")
 if ENVIRONMENT == "RASPBERRY":
-    from gpiosManagerRaspberry import GpiosManager
+    from gpiosManagerRaspberry5 import gpiosManager
 elif ENVIRONMENT == "ORANGPI":
     from gpiosManagerOrange import GpiosManager
 else:
@@ -117,7 +117,7 @@ def timerSpecialDoor(target_time,timer_on,timer_off,delay):
     doors.specialDoorOff()
 
 
-class Manager(threading.Thread):
+class Manager(threading.Thread,GpiosManager):
     def __init__(self,rs232, stop_event,mode):
         super().__init__()
         self.rs232 = rs232

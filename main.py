@@ -8,16 +8,8 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
-ENVIRONMENT = os.getenv("ENVIRONMENT", "LOCAL")
 mode = os.getenv("MODE","COLISEO")
 
-if ENVIRONMENT == "RASPBERRY":
-    from gpiosManagerRaspberry import GpiosManager
-elif ENVIRONMENT == "ORANGPI":
-    from gpiosManagerOrange import GpiosManager
-else:
-    from gpiosManagerLocal import GpiosManager
 
 #version 4.0
 app = Flask(__name__)
@@ -30,19 +22,19 @@ def home():
     if request.method == 'POST':
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
-            estado = gpios.ReadSensor()
+            estado = manager.ReadSensor()
             result = f'sensor: {estado}'
         elif operation == 'generatePass':
             manager.generatePass()
             result = f'Pase generado'
         elif operation == 'TestCerradura1':
-            result = gpios.testLock()
+            result = manager.testLock()
         elif operation == 'TestLuzLed':
-            result = gpios.testArrow()
+            result = manager.testArrow()
         elif operation == 'ActuadorOff':
-            result = gpios.specialDoorOff()
+            result = manager.specialDoorOff()
         elif operation == 'TestRelay':
-            result = gpios.testRelay()
+            result = manager.testRelay()
         else:
             result = f'Error Operacion No existente'
     return render_template('home.html', result=result)
@@ -61,7 +53,7 @@ def events_api():
         operation = request.get_json()
         if operation['operation'] == "restart":
             manager.maintenance = False
-            gpios.restart_validator()
+            manager.restart_validator()
             return  jsonify({"message":"reiniciado con exito"})
         elif operation['operation'] == "maintenance":
             manager.maintenance = True
@@ -162,32 +154,32 @@ def mecanism_Api():
         if not json_data:
             return jsonify({"error": "No se recibió JSON"}), 400
         if json_data['operation'] == 'read_sensor':
-            result = gpios.ReadSensor()
+            result = manager.ReadSensor()
         elif json_data['operation'] == 'read_serial':
             result = rs232.getData()
         elif json_data['operation'] == 'generate_normal_pass':
             manager.generatePass()
             result = 'Pase Generado'
         elif json_data['operation'] == 'test_lock':
-            gpios.testLock()
+            manager.testLock()
             result = "Cerradura 1 Testeada"
         elif json_data['operation'] == 'test_arrow':
-            gpios.testArrow()
+            manager.testArrow()
             result = "Luz Led Testeada"
         elif json_data['operation'] == 'generate_special_pass':
             manager.generateSpecialPass()
             result = "Pase Especial Generado"
         elif json_data['operation'] == 'test_relay':
-            gpios.testRelay()
+            manager.testRelay()
             result = "Testeo de Reles"
         elif json_data['operation'] == 'actuador_off':
-            gpios.specialDoorOff()
+            manager.specialDoorOff()
             result = "puerta especial Apagada"
         elif json_data['operation'] == 'open_special_door':
-            gpios.specialDoorOpen()
+            manager.specialDoorOpen()
             result = "puerta especial abriendose !!!!"
         elif json_data['operation'] == 'close_special_door':
-            gpios.specialDoorClose()
+            manager.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
         else:
             result = f'Error Operacion No existente:'
@@ -250,7 +242,7 @@ def datos():
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event)
     manager = Manager(stop_event=stop_event,rs232=rs232,mode=mode)
-    gpios = GpiosManager()
+
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
     audio_manager = AudioManager()
     init_params = database.currentParameters()
