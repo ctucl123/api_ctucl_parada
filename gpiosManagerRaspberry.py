@@ -39,7 +39,7 @@ class GpiosManager():
         self.pin_libre3 = DigitalOutputDevice(23)
 
         # Pines de entrada
-        self.sensor_45 = DigitalInputDevice(16, pull_up=True)
+        #self.sensor_45 = DigitalInputDevice(16, pull_up=True)
         self.sensor = DigitalInputDevice(26, pull_up=True)
 
 
