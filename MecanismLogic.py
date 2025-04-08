@@ -92,7 +92,8 @@ def timer_electromagnet(target_time):
     while time.time() - inicio < target_time:
         if doors.ReadSensor() == True:
             while doors.ReadSensor() == True:
-                time.sleep(0.1)
+                if time.time() - inicio >= target_time:
+                    break
             counter += 1         
         if counter >= 2:
            doors.doorClose()
