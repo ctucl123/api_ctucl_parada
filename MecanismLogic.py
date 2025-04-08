@@ -1,12 +1,19 @@
-from gpiosManager import GpiosManager
-#from gpiosManagerOrange import GpiosManager
+import os
+from dotenv import load_dotenv
 from audioManager import AudioManager
 import threading
 import time
-import subprocess
 
+load_dotenv()
+ENVIRONMENT = os.getenv("ENVIRONMENT", "LOCAL")
+if ENVIRONMENT == "RASPBERRY":
+    from gpiosManagerRaspberry import GpiosManager
+elif ENVIRONMENT == "ORANGPI":
+    from gpiosManagerOrange import GpiosManager
+else:
+    from gpiosManagerLocal import GpiosManager
 
-#version 1.2
+#version 1.3
 
 #llamada a las clases
 doors =  GpiosManager()
@@ -82,12 +89,12 @@ def timer_electromagnet(target_time,delay):
     doors.doorOpen()
     inicio = time.time()
     counter = 0
-    while time.time() - inicio < 8:
+    while time.time() - inicio < target_time:
         time.sleep(0.1)
         if doors.ReadSensor() == True:
            counter +=1
 
-        elif counter == 2:
+        elif counter >= 2:
            doors.doorClose()
            doors.turnstileBlock()
            audio_manager.close_sound()
