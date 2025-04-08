@@ -24,7 +24,7 @@ else:
     print("Usando RPiGPIOFactory (Raspberry Pi 3)")
 
 import time
-import random
+
 
 class GpiosManager():
     def __init__(self):
@@ -41,14 +41,7 @@ class GpiosManager():
         # Pines de entrada
         self.sensor_45 = DigitalInputDevice(16, pull_up=True)
         self.sensor = DigitalInputDevice(26, pull_up=True)
-        self.sensor_45.when_changed = self.sensor_45_changed
-        self.sensor.when_changed = self.sensor_changed
 
-    def sensor_45_changed(self, value):
-        print("Sensor 45 cambiado:", value)
-
-    def sensor_changed(self, value):
-        print("Sensor cambiado:", value)
 
     def turnstileOpen(self):
         self.cerradura1.on()
