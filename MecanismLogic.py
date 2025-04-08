@@ -7,7 +7,7 @@ import time
 load_dotenv()
 ENVIRONMENT = os.getenv("ENVIRONMENT", "LOCAL")
 if ENVIRONMENT == "RASPBERRY":
-    from gpiosManagerRaspberry5 import GpiosManager
+    from gpiosManagerRaspberry import GpiosManager
 elif ENVIRONMENT == "ORANGPI":
     from gpiosManagerOrange import GpiosManager
 else:

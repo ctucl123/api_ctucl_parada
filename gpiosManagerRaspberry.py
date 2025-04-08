@@ -39,9 +39,18 @@ class GpiosManager():
         self.pin_libre3 = DigitalOutputDevice(23)
 
         # Pines de entrada
-        #self.sensor_45 = DigitalInputDevice(16, pull_up=True)
+        self.sensor_45 = DigitalInputDevice(16, pull_up=True)
         self.sensor = DigitalInputDevice(26, pull_up=True)
 
+        #estado inicial de pines
+        self.cerradura1.on()
+        self.electroiman.off()
+        self.actuador_up.on()
+        self.actuador_down.on()
+        self.semaforo.on()
+        self.validador.on()
+        self.pulsante_1.on()
+        self.pin_libre3.on()
 
     def turnstileOpen(self):
         self.cerradura1.on()

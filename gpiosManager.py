@@ -36,8 +36,8 @@ class GpiosManager():
         GPIO.output(self.semaforo,GPIO.HIGH)
         GPIO.output(self.actuador_down,GPIO.HIGH)
         GPIO.output(self.actuador_up,GPIO.HIGH)
-        GPIO.output(self.electroiman,GPIO.LOW)
         GPIO.output(self.cerradura1,GPIO.HIGH)
+        GPIO.output(self.electroiman,GPIO.LOW)
        
         
     def turnstileOpen(self):
