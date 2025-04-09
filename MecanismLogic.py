@@ -177,16 +177,10 @@ class Manager(threading.Thread,GpiosManager):
                             temporizador_special = threading.Thread(target=timerSpecialDoor,args=(self.time_special_door,self.time_open_actuator,self.time_close_actuator,self.time_delay_turnstile))
                             temporizador_special.start()
                             temporizador_special.join()
-            if doors.rebootButton():
-                aux_reboot_time = time.time()
-                p_reboot_time = reboot_time + 3600 
-                if aux_reboot_time >= p_reboot_time:
-                    doors.validador_off()
-                    time.sleep(20)
-                    doors.validador_on()
-                    reboot_time = aux_reboot_time 
             while(self.maintenance):
                 audio_manager.maintenance_sound()
+                time_log = time.time()
+                print(f"se apago el validador a las{time_log}")
                 doors.validador_off()
                 time.sleep(20)             
             time.sleep(0.1)
