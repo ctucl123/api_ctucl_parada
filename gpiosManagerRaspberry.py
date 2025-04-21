@@ -1,10 +1,9 @@
 import os
+from gpiozero import Device
+from gpiozero import DigitalOutputDevice, DigitalInputDevice
 from dotenv import load_dotenv
 
 load_dotenv()
-
-from gpiozero import Device
-from gpiozero import DigitalOutputDevice, DigitalInputDevice
 
 # Detecta entorno desde .env
 ENV = os.getenv("TARGET", "PI3")
