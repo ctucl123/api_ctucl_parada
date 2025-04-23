@@ -29,17 +29,17 @@ class GpiosManager():
     def __init__(self):
         # Pines de salida
         self.cerradura = DigitalOutputDevice(6)
-        self.electroiman = DigitalOutputDevice(5)
-        self.actuador_up = DigitalOutputDevice(21)
-        self.actuador_down = DigitalOutputDevice(20)
-        self.semaforo = DigitalOutputDevice(27)
-        self.validador = DigitalOutputDevice(17)
-        self.pin_libre3 = DigitalOutputDevice(23)
+        self.electroiman = DigitalOutputDevice(26)
+        self.semaforo = DigitalOutputDevice(18)
+        self.actuador_up = DigitalOutputDevice(23)
+        self.actuador_down = DigitalOutputDevice(24)
+        self.validador = DigitalOutputDevice(25)
+        self.pin_libre3 = DigitalOutputDevice(8)
 
         # Pines de entrada
-        self.sensor_45 = DigitalInputDevice(16, pull_up=True)
-        self.sensor = DigitalInputDevice(26, pull_up=True)
-        self.pulsante_1 = DigitalInputDevice(24, pull_up=True)
+        self.sensor_45 = DigitalInputDevice(5, pull_up=True)
+        self.sensor = DigitalInputDevice(22, pull_up=True)
+        self.pulsante_1 = DigitalInputDevice(2, pull_up=True)
         #estado inicial de pines
         self.cerradura.on()
         self.electroiman.off()

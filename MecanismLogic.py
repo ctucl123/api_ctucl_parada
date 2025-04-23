@@ -59,24 +59,25 @@ def _open_turnstile(target_time):
 
 
 def timer_electromagnet(target_time):
-    logger.debug("SECUENCIA DE PUERTA ELECTROMAGNETICA")
     audio_manager.open_sound()
     doors.turnstileOpen()
     doors.doorOpen()
+    logger.info("ABRIENDO PUERTA ELECTROMAGNETICA")
     start = time.time()
     counter = 0
     while time.time() - start < target_time:
-        while doors.ReadSensor():
-            if time.time() - start >= target_time:
-                counter += 1
-                break
+        if doors.ReadSensor() == True:
+            while doors.ReadSensor() ==True:
+                if time.time() - start >= target_time:
+                    break
+            counter += 1  
         if counter >= 2:
-            logger.debug("COUNTER: %s", counter)
             break
-
     audio_manager.close_sound()
     doors.doorClose()
     doors.turnstileBlock()
+    logger.info("COUNTER: %s", counter)
+    logger.info("CERRANDO PUERTA ELECTROMAGNETICA")
 
 
 def timer_special_door(duration, open_time, close_time, delay):
@@ -124,14 +125,13 @@ class Manager(threading.Thread, GpiosManager):
 
             while self.maintenance:
                 audio_manager.maintenance_sound()
-                logger.warning(f"VALIDADOR APAGADO A LAS: {time.time()}")
+                logger.info(f"VALIDADOR APAGADO A LAS: {time.time()}")
                 doors.validador_off()
                 time.sleep(20)
 
             time.sleep(0.1)
 
     def _handle_standard_pass(self):
-        logger.debug(f"Modo: {self.mode} | Activando pase estándar.")
         self._start_timer(self.mode)
         self.activatePass = max(0, self.activatePass - 1)
 
@@ -146,10 +146,8 @@ class Manager(threading.Thread, GpiosManager):
 
     def _handle_rs232_pass(self):
         if self.rs232.data[18] != '3':
-            logger.info(f"Modo: {self.mode} | Validación RS232 normal")
             self._start_timer(self.mode)
         else:
-            logger.info("Validación RS232 especial")
             threading.Thread(
                 target=timer_special_door,
                 args=(self.time_special_door, self.time_open_actuator,
