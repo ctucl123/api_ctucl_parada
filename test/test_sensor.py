@@ -29,25 +29,34 @@ class GpiosManager():
     def __init__(self):
         # Pines de salida
         self.cerradura = DigitalOutputDevice(6)
-        self.electroiman = DigitalOutputDevice(5)
-        self.semaforo = DigitalOutputDevice(27)
-        self.actuador_up = DigitalOutputDevice(21)
-        self.actuador_down = DigitalOutputDevice(20)
-        self.validador = DigitalOutputDevice(17)
-        self.pin_libre3 = DigitalOutputDevice(24)
+        self.electroiman = DigitalOutputDevice(26)
+        self.semaforo = DigitalOutputDevice(18)
+        self.actuador_up = DigitalOutputDevice(23)
+        self.actuador_down = DigitalOutputDevice(24)
+        self.validador = DigitalOutputDevice(25)
+        self.pin_libre1 = DigitalOutputDevice(7)
+        self.pin_libre2 = DigitalOutputDevice(1)
+        self.pin_libre3 = DigitalOutputDevice(12)
+        self.pin_libre4 = DigitalOutputDevice(16)
+        self.pin_libre5 = DigitalOutputDevice(20)
 
         # Pines de entrada
-        self.sensor_45 = DigitalInputDevice(16, pull_up=True)
-        self.sensor = DigitalInputDevice(26, pull_up=True)
-        self.pulsante_1 = DigitalInputDevice(2, pull_up=True)
+        self.sensor_45 = DigitalInputDevice(5, pull_up=True)
+        self.sensor = DigitalInputDevice(22, pull_up=True)
+        #self.pulsante_1 = DigitalInputDevice(2, pull_up=False)
         #estado inicial de pines
         self.cerradura.on()
-        self.electroiman.off()
+        self.electroiman.on()
         self.actuador_up.on()
         self.actuador_down.on()
         self.semaforo.on()
         self.validador.on()
+        self.pin_libre1.on()
+        self.pin_libre2.on()
         self.pin_libre3.on()
+        self.pin_libre4.on()
+        self.pin_libre5.on()
+ 
 
     def turnstileOpen(self):
         self.cerradura.off()
@@ -124,3 +133,21 @@ class GpiosManager():
         self.electroiman.off()
         self.semaforo.on()
         return "puerta general cerrada"
+
+try:
+    gpios = GpiosManager()
+
+    while True:
+        if gpios.ReadSensor():
+            print("Sensor1 activado")
+        else:
+            print("Sensor1 desactivado")
+        if gpios.ReadSensor45():
+            print("Sensor2 activado")
+        else:
+            print("Sensor2 desactivado")
+        time.sleep(0.5)
+except KeyboardInterrupt:
+    print("\n🛑 Interrumpido por el usuario.")
+finally:
+    pass
