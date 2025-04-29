@@ -2,7 +2,7 @@ import os
 from gpiozero import Device
 from gpiozero import DigitalOutputDevice, DigitalInputDevice
 from dotenv import load_dotenv
-
+import time
 load_dotenv()
 
 # Detecta entorno desde .env
@@ -22,7 +22,6 @@ else:
     Device.pin_factory = RPiGPIOFactory()
     print("Usando RPiGPIOFactory (Raspberry Pi 3)")
 
-import time
 
 
 class GpiosManager():
@@ -33,7 +32,7 @@ class GpiosManager():
         self.semaforo = DigitalOutputDevice(27)
         self.actuador_up = DigitalOutputDevice(21)
         self.actuador_down = DigitalOutputDevice(20)
-        self.validador = DigitalOutputDevice(17)
+        self.electroiman_especial = DigitalOutputDevice(17)
         self.pin_libre3 = DigitalOutputDevice(24)
 
         # Pines de entrada
@@ -46,7 +45,7 @@ class GpiosManager():
         self.actuador_up.on()
         self.actuador_down.on()
         self.semaforo.on()
-        self.validador.on()
+        self.electroiman_especial.off()
         self.pin_libre3.on()
 
     def turnstileOpen(self):
@@ -74,12 +73,14 @@ class GpiosManager():
         return 'Luz Led testeada con exito'
 
     def specialDoorOpen(self):
+        self.electroiman_especial.on()
         self.actuador_down.on()
         self.actuador_up.off()
         self.semaforo.off()
         return "Puerta especial Abierta"
 
     def specialDoorClose(self):
+        self.electroiman_especial.off()
         self.actuador_up.on()
         self.actuador_down.off()
         self.semaforo.on()
@@ -124,3 +125,11 @@ class GpiosManager():
         self.electroiman.off()
         self.semaforo.on()
         return "puerta general cerrada"
+    
+    def electroimanSpecialOpen(self):
+        self.electroiman_especial.on()
+        return "Electroiman especial abierto"
+    
+    def electroimanSpecialClose(self):
+        self.electroiman_especial.off()
+        return "Electroiman especial cerrado" 

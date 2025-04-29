@@ -11,7 +11,7 @@ class rs232Comunication(threading.Thread):
         super().__init__()
         self.lock = threading.Lock()
         self.stop_event = stop_event
-        self.data = []
+        self.data = ''
         self.validation = False
         self.n_validations = 0
         self.valor_actual = 0

@@ -3,16 +3,9 @@ from dotenv import load_dotenv
 from audioManager import AudioManager
 import threading
 import time
-
+from gpiosManagerRaspberry import GpiosManager
 load_dotenv()
-ENVIRONMENT = os.getenv("ENVIRONMENT", "RASPBERRY")
-if ENVIRONMENT == "RASPBERRY":
-    from gpiosManagerRaspberry import GpiosManager
-else:
-    from gpiosManagerLocal import GpiosManager
-
-#version 1.4
-
+#version 1.5
 #llamada a las clases
 doors =  GpiosManager()
 audio_manager = AudioManager()

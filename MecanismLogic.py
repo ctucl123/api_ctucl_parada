@@ -4,7 +4,7 @@ import threading
 import logging
 from dotenv import load_dotenv
 from audioManager import AudioManager
-
+from gpiosManagerRaspberry import GpiosManager
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,15 +21,8 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 ENVIRONMENT = os.getenv("ENVIRONMENT", "RASPBERRY")
 logger.info("Environment: %s", ENVIRONMENT)
-if ENVIRONMENT == "RASPBERRY":
-    from gpiosManagerRaspberry import GpiosManager
-else:
-    from gpiosManagerLocal import GpiosManager
-
 doors = GpiosManager()
 audio_manager = AudioManager()
-
-
 def timer_turnstile(target_time):
     if doors.ReadSensor():
         _open_turnstile(target_time)
@@ -81,6 +74,7 @@ def timer_electromagnet(target_time):
 
 
 def timer_special_door(duration, open_time, close_time, delay):
+    doors.electroimanSpecialOpen()
     time.sleep(delay)
     audio_manager.open_special_sound()
     doors.specialDoorOpen()
@@ -89,6 +83,7 @@ def timer_special_door(duration, open_time, close_time, delay):
     time.sleep(duration)
     audio_manager.close_special_sound()
     doors.specialDoorClose()
+    doors.electroimanSpecialClose()
     time.sleep(close_time)
     doors.specialDoorOff()
 
@@ -121,6 +116,7 @@ class Manager(threading.Thread, GpiosManager):
                 elif self.specialPass > 0:
                     self._handle_special_pass()
                 elif self.rs232.validation:
+                    self.rs232.validation = False
                     self._handle_rs232_pass()
 
             while self.maintenance:
