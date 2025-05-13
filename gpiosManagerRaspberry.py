@@ -27,109 +27,111 @@ else:
 class GpiosManager():
     def __init__(self):
         # Pines de salida
-        self.cerradura = DigitalOutputDevice(6)
-        self.electroiman = DigitalOutputDevice(5)
-        self.semaforo = DigitalOutputDevice(27)
-        self.actuador_up = DigitalOutputDevice(21)
-        self.actuador_down = DigitalOutputDevice(20)
-        self.electroiman_especial = DigitalOutputDevice(17)
-        self.pin_libre3 = DigitalOutputDevice(24)
-
-        # Pines de entrada
-        self.sensor_45 = DigitalInputDevice(16, pull_up=True)
-        self.sensor = DigitalInputDevice(26, pull_up=True)
-        self.pulsante_1 = DigitalInputDevice(2, pull_up=True)
+        self.lock = DigitalOutputDevice(6)
+        self.arrow_light = DigitalOutputDevice(26)
+        self.actuator_up = DigitalOutputDevice(18)
+        self.actuator_down = DigitalOutputDevice(23)
+        self.special_electromagnet = DigitalOutputDevice(24)
+        # Pines libres
+        self.gpio_available1 = DigitalOutputDevice(25)
+        self.gpio_available2 = DigitalOutputDevice(8)
+        self.gpio_available3 = DigitalOutputDevice(7)
+        self.gpio_available4 = DigitalOutputDevice(1)
+        self.gpio_available5 = DigitalOutputDevice(12)
+        self.gpio_available6 = DigitalOutputDevice(16)
+        self.gpio_available7 = DigitalOutputDevice(20)
+        # Pines de entrada libres
+        self.input_available1 = DigitalInputDevice(2, pull_up=True)
+        self.input_available2 = DigitalInputDevice(3, pull_up=True)
+        self.input_available3 = DigitalInputDevice(17, pull_up=True)
+        self.input_available4 = DigitalInputDevice(27, pull_up=True)
+        # Pines de sensores
+        self.sensor_45 = DigitalInputDevice(22, pull_up=True)
+        self.sensor = DigitalInputDevice(5, pull_up=True)
         #estado inicial de pines
-        self.cerradura.on()
-        self.electroiman.off()
-        self.actuador_up.on()
-        self.actuador_down.on()
-        self.semaforo.on()
-        self.electroiman_especial.off()
-        self.pin_libre3.on()
+        self.lock.on()
+        self.arrow_light.on()
+        self.actuator_up.on()
+        self.actuator_down.on()
+        self.special_electromagnet.off()
+        self.gpio_available1.on()
+        self.gpio_available2.on()
+        self.gpio_available3.on()
+        self.gpio_available4.on()
+        self.gpio_available5.on()
+        self.gpio_available6.on()
+        self.gpio_available7.on()
 
-    def turnstileOpen(self):
-        self.cerradura.off()
-        self.semaforo.off()
-        return "puerta general abierta"
+    def open_lock(self):
+        try:
+            self.lock.off()
+            self.arrow_light.on()
+            return True
+        except Exception as e:
+            return False
 
-    def turnstileBlock(self):
-        self.cerradura.on()
-        self.semaforo.on()
-        return "puerta general bloqueada"
+    def close_lock(self):
+        try:
+            self.lock.on()
+            self.arrow_light.off()
+            return True
+        except Exception as e:  
+            return False
 
-    def testLock(self):
-        self.cerradura.off()
-        time.sleep(1)
-        self.cerradura.on()
-        time.sleep(1)
-        return 'Cerradura 1 testeada con exito'
 
-    def testArrow(self):
-        self.semaforo.off()
-        time.sleep(1)
-        self.semaforo.on()
-        time.sleep(2)
-        return 'Luz Led testeada con exito'
+    def test_lock(self):
+        try:
+            self.lock.off()
+            time.sleep(1)
+            self.lock.on()
+            time.sleep(1)
+            return True
+        except Exception as e:
+            return False
 
-    def specialDoorOpen(self):
-        self.electroiman_especial.on()
-        self.actuador_down.on()
-        self.actuador_up.off()
-        self.semaforo.off()
-        return "Puerta especial Abierta"
+    def test_arrow(self):
+        try:
+            self.arrow_light.off()
+            time.sleep(1)
+            self.arrow_light.on()
+            time.sleep(1)
+            return True
+        except Exception as e:  
+            return False
 
-    def specialDoorClose(self):
-        self.electroiman_especial.off()
-        self.actuador_up.on()
-        self.actuador_down.off()
-        self.semaforo.on()
-        return "Puerta Especial Cerrada"
+    def special_door_open(self):
+        try:
+            self.special_electromagnet.on()
+            self.actuator_down.on()
+            self.actuator_up.off()
+            self.arrow_light.off()
+            return True
+        except Exception as e:
+            return False
 
-    def specialDoorOff(self):
-        self.actuador_up.on()
-        self.actuador_down.on()
-        self.semaforo.on()
-        return "sistema silla de ruedas apagado"
+    def special_door_close(self):
+        try:
+            self.special_electromagnet.off()
+            self.actuator_up.on()
+            self.actuator_down.off()
+            self.arrow_light.on()
+            return True
+        except Exception as e:
+            return False
 
-    def rebootButton(self):
-        return self.pulsante_1.value == 0
+    def special_door_off(self):
+        try:
+            self.actuator_down.off()
+            self.actuator_up.off()
+            self.arrow_light.on()
+            return True
+        except Exception as e:
+            return False
 
-    def ReadSensor(self):
+
+    def read_sensor(self):
         return self.sensor.value == 0
 
-    def ReadSensor45(self):
+    def read_sensor_45(self):
         return self.sensor_45.value == 0
 
-    def validador_on(self):
-        self.validador.off()
-        return True
-
-    def validador_off(self):
-        self.validador.on()
-        return True
-
-    def restart_validator(self):
-        self.validador.on()
-        time.sleep(1)
-        self.validador.off()
-        time.sleep(4)
-        return True
-
-    def doorOpen(self):
-        self.electroiman.on()
-        self.semaforo.off()
-        return "puerta general abierta"
-
-    def doorClose(self):
-        self.electroiman.off()
-        self.semaforo.on()
-        return "puerta general cerrada"
-    
-    def electroimanSpecialOpen(self):
-        self.electroiman_especial.on()
-        return "Electroiman especial abierto"
-    
-    def electroimanSpecialClose(self):
-        self.electroiman_especial.off()
-        return "Electroiman especial cerrado" 

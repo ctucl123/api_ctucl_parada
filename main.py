@@ -52,10 +52,10 @@ def events_api():
         if operation['operation'] == "restart":
             manager.maintenance = False
             manager.restart_validator()
-            return  jsonify({"message":"reiniciado con exito"})
+            return  jsonify({"result":{"message":"reiniciado con exito"},"status":200})
         elif operation['operation'] == "maintenance":
             manager.maintenance = True
-            return  jsonify({"message":"modo mantenimiento con exito"})
+            return  jsonify({"result":{"message":"reiniciado con exito"},"status":200})
         return
 
 @app.route('/api/audio', methods=['POST'])
