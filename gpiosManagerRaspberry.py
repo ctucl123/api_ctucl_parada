@@ -53,7 +53,7 @@ class GpiosManager():
         self.arrow_light.on()
         self.actuator_up.on()
         self.actuator_down.on()
-        self.special_electromagnet.off()
+        self.special_electromagnet.on()
         self.gpio_available1.on()
         self.gpio_available2.on()
         self.gpio_available3.on()
