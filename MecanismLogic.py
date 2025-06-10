@@ -27,6 +27,7 @@ def timer_turnstile(target_time):
     if doors.read_sensor():
         _open_turnstile(target_time)
     else:
+        logger.info("Puerta bloqueada, esperando a que se abra.")
         doors.close_lock()
         audio_manager.blocked_door_sound()
         while not doors.read_sensor():
