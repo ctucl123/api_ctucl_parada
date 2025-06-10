@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import time
 load_dotenv()
 
-# Detecta entorno desde .env
+# version2
 ENV = os.getenv("TARGET", "PI3")
 
 if ENV == "PI5":
@@ -65,7 +65,7 @@ class GpiosManager():
     def open_lock(self):
         try:
             self.lock.off()
-            self.arrow_light.on()
+            self.arrow_light.off()
             return True
         except Exception as e:
             return False
@@ -73,7 +73,7 @@ class GpiosManager():
     def close_lock(self):
         try:
             self.lock.on()
-            self.arrow_light.off()
+            self.arrow_light.on()
             return True
         except Exception as e:  
             return False
