@@ -155,27 +155,36 @@ class Manager(threading.Thread, GpiosManager):
     # Métodos públicos
     def generatePass(self):
         self.activatePass += 1
+        return {"msg": "Pase generado", "status": True}
 
     def generateSpecialPass(self):
         self.specialPass += 1
-        return "Pase especial con éxito"
+        return {"msg": "Pase especial generado", "status": True}
 
     def ReadSensor(self):
-        return doors.read_sensor()
+        doors.read_sensor()
+        if doors.read_sensor():
+            return {"msg": "Sensor de puerta Normal", "status": True}
+        else:
+            return {"msg": "Sensor de puerta Normal", "status": False}
 
     def ReadSensor45(self):
-        return doors.read_sensor_45()
+        if doors.read_sensor_45():
+            return {"msg": "Sensor de puerta 45°", "status": True}
+        else:
+            return {"msg": "Sensor de puerta 45°", "status": False}
 
     def testLock(self):
         doors.test_lock()
+        return {"msg": "Se prueba bloqueo", "status": True}
 
     def testArrow(self):
         doors.test_arrow()
-
+        return {"msg": "Se prueba flecha", "status": True}
 
     def specialDoorOff(self):
         doors.special_door_off()
-        return {"msg": "Se cierra puerta especial", "status": True}
+        return {"msg": "Se apaga puerta especial", "status": True}
 
     def specialDoorOpen(self):
         doors.special_door_open()

@@ -23,15 +23,16 @@ def home():
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
             estado = manager.ReadSensor()
-            result = f'sensor normal: {estado}'
-        if operation == 'ReadSensor45':
+            result = f'sensor normal: {estado['result']}'
+        elif operation == 'ReadSensor45':
             estado = manager.ReadSensor45()
-            result = f'sensor a 45 grados: {estado}'
+            result = f'sensor a 45 grados: {estado['result']}'
         elif operation == 'generatePass':
             manager.generatePass()
-            result = f'Pase generado'
+            result = estado['msg']
         elif operation == 'TestCerradura1':
-            result = manager.testLock()
+            manager.testLock()
+            result = estado['msg']
         elif operation == 'TestLuzLed':
             result = manager.testArrow()
         elif operation == 'ActuadorOff':
