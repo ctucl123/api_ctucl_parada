@@ -22,13 +22,17 @@ def home():
     if request.method == 'POST':
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
-            estado = manager.ReadSensor()
-            result = f'sensor: {estado}'
+            state = manager.ReadSensor()
+            result = state['value']
+        elif operation == 'ReadSensor45':
+            state = manager.ReadSensor45()
+            result = state['value']
         elif operation == 'generatePass':
-            manager.generatePass()
-            result = f'Pase generado'
+            estado = manager.generatePass()
+            result = estado['msg']
         elif operation == 'TestCerradura1':
-            result = manager.testLock()
+            estado = manager.testLock()
+            result = estado['msg']
         elif operation == 'TestLuzLed':
             result = manager.testArrow()
         elif operation == 'ActuadorOff':
@@ -52,10 +56,10 @@ def events_api():
         if operation['operation'] == "restart":
             manager.maintenance = False
             manager.restart_validator()
-            return  jsonify({"message":"reiniciado con exito"})
+            return  jsonify({"result":{"message":"reiniciado con exito"},"status":200})
         elif operation['operation'] == "maintenance":
             manager.maintenance = True
-            return  jsonify({"message":"modo mantenimiento con exito"})
+            return  jsonify({"result":{"message":"reiniciado con exito"},"status":200})
         return
 
 @app.route('/api/audio', methods=['POST'])
@@ -152,7 +156,8 @@ def mecanism_Api():
         if not json_data:
             return jsonify({"error": "No se recibió JSON"}), 400
         if json_data['operation'] == 'read_sensor':
-            result = manager.ReadSensor()
+            state = manager.ReadSensor()
+            result = state['value']
         elif json_data['operation'] == 'read_serial':
             result = rs232.getData()
         elif json_data['operation'] == 'generate_normal_pass':

@@ -15,28 +15,31 @@ class SqliteManager(threading.Thread):
         self.place = "Parada de prueba"
         self.lat = "0.0"
         self.lon = "0.0"
+        self.already_processed = False  # Variable para controlar si ya se procesó la transacción
 
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
-                if self.rs232.validation:
-                    if self.rs232.n_validations != self.aux_validation_target:
-                        try:
-                            aux_data = str(self.rs232.data[1:-1])
-                            current_datetime = datetime.now()
-                            data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-                            codigo =aux_data[25:34]
-                            tipo = int(aux_data[14:18])
-                            fecha = aux_data[6:8]+'/'+aux_data[8:10]+'/'+aux_data[10:14]
-                            tiempo = aux_data[0:2]+':'+aux_data[2:4]+':'+aux_data[4:6]
-                            costo = float(int(aux_data[46:54])/100)
-                            saldo = float(int(aux_data[-8:])/100)
-                            saldo_anterior = float(int(aux_data[38:46])/100)
-                            self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
-                            self.aux_validation_target = self.rs232.n_validations
-                            print(f'transaccion exitosa! CODIGO:{codigo}')
-                        except:
-                            print("Hubo un error al momento de registrar la transaccion")
+                if self.rs232.validation and not self.already_processed: #esto es un condicional que cuando hay una validacion en el puerto serie estara en true
+                    try:
+                        aux_data = str(self.rs232.data[1:-1])
+                        current_datetime = datetime.now()
+                        data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                        codigo =aux_data[25:34]
+                        tipo = int(aux_data[14:18])
+                        fecha = aux_data[6:8]+'/'+aux_data[8:10]+'/'+aux_data[10:14]
+                        tiempo = aux_data[0:2]+':'+aux_data[2:4]+':'+aux_data[4:6]
+                        costo = float(int(aux_data[46:54])/100)
+                        saldo = float(int(aux_data[-8:])/100)
+                        saldo_anterior = float(int(aux_data[38:46])/100)
+                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
+                        print(f'transaccion exitosa! CODIGO:{codigo}')
+                        self.already_processed = True  # Marcar como procesada la transacción
+                    except:
+                        self.already_processed = False  # Reiniciar si hubo un error
+                        print("Hubo un error al momento de registrar la transaccion")
+                elif not self.rs232.validation:
+                    self.already_processed = False
 
     def add_transaction(self,conn, transaction):
         sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,lat,lon,date)
@@ -151,4 +154,3 @@ class SqliteManager(threading.Thread):
                 print(f'ID: {parameter_id}')
         except sqlite3.Error as e:
             print(e)
-
