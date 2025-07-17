@@ -23,10 +23,10 @@ def home():
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
             estado = manager.ReadSensor()
-            result = f'sensor normal: {estado['status']}'
+            result = f"sensor normal: {estado['status']}"
         elif operation == 'ReadSensor45':
             estado = manager.ReadSensor45()
-            result = f'sensor a 45 grados: {estado['status']}'
+            result = f"sensor a 45 grados: {estado['status']}"
         elif operation == 'generatePass':
             manager.generatePass()
             result = estado['msg']
