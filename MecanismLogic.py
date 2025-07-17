@@ -39,13 +39,35 @@ def _open_turnstile(target_time):
     doors.open_lock()
     audio_manager.open_sound()
     start = time.time()
+    flag = False
     while time.time() - start < target_time:
-        if doors.read_sensor():
+        if doors.read_sensor() == False:
+            while not doors.read_sensor():
+                if doors.read_sensor_45():
+                    flag = True
+                    break
+                if time.time() - start >= target_time:
+                    break
+        if flag:
             break
-
     doors.close_lock()
     audio_manager.close_sound()
 
+# def _open_turnstile(target_time):
+#     doors.open_lock()
+#     audio_manager.open_sound()
+#     start = time.time()
+
+#     while time.time() - start < target_time:
+#         if doors.read_sensor_45():
+#             hold_start = time.time()
+#             while doors.read_sensor():
+#                 if time.time() - hold_start >= target_time or doors.read_sensor():
+#                     break
+#             break
+
+#     doors.close_lock()
+#     audio_manager.close_sound()
 
 def timer_electromagnet(target_time):
     audio_manager.open_sound()
@@ -150,47 +172,47 @@ class Manager(threading.Thread, GpiosManager):
     # Métodos públicos
     def generatePass(self):
         self.activatePass += 1
-        return {"msg": "Pase generado", "status": True}
+        return {"msg": "Pase generado", "value": True}
 
     def generateSpecialPass(self):
         self.specialPass += 1
-        return {"msg": "Pase especial generado", "status": True}
+        return {"msg": "Pase especial generado", "value": True}
 
     def ReadSensor(self):
         doors.read_sensor()
         if doors.read_sensor():
-            return {"msg": "Sensor de puerta Normal", "status": True}
+            return {"msg": "Sensor de puerta Normal", "value": True}
         else:
-            return {"msg": "Sensor de puerta Normal", "status": False}
+            return {"msg": "Sensor de puerta Normal", "value": False}
 
     def ReadSensor45(self):
         if doors.read_sensor_45():
-            return {"msg": "Sensor de puerta 45°", "status": True}
+            return {"msg": "Sensor de puerta 45°", "value": True}
         else:
-            return {"msg": "Sensor de puerta 45°", "status": False}
+            return {"msg": "Sensor de puerta 45°", "value": False}
 
     def testLock(self):
         doors.test_lock()
-        return {"msg": "Se prueba bloqueo", "status": True}
+        return {"msg": "Se prueba bloqueo", "value": True}
 
     def testArrow(self):
         doors.test_arrow()
-        return {"msg": "Se prueba flecha", "status": True}
+        return {"msg": "Se prueba flecha", "value": True}
 
     def specialDoorOff(self):
         doors.special_door_off()
-        return {"msg": "Se apaga puerta especial", "status": True}
+        return {"msg": "Se apaga puerta especial", "value": True}
 
     def specialDoorOpen(self):
         doors.special_door_open()
-        return {"msg": "Se abre puerta especial", "status": True}
+        return {"msg": "Se abre puerta especial", "value": True}
 
     def specialDoorClose(self):
         doors.special_door_close()
-        return {"msg": "Se cierra puerta especial", "status": True}
+        return {"msg": "Se cierra puerta especial", "value": True}
     
     def restart_validator(self):
         doors.va()
         time.sleep(1)
         doors.validador_on()
-        return {"msg": "Se reinicia validador", "status": True}
+        return {"msg": "Se reinicia validador", "value": True}

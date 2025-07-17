@@ -22,16 +22,16 @@ def home():
     if request.method == 'POST':
         operation = request.form.get('operation')
         if operation == 'ReadSensor':
-            estado = manager.ReadSensor()
-            result = f"sensor normal: {estado['status']}"
+            state = manager.ReadSensor()
+            result = state['value']
         elif operation == 'ReadSensor45':
-            estado = manager.ReadSensor45()
-            result = f"sensor a 45 grados: {estado['status']}"
+            state = manager.ReadSensor45()
+            result = state['value']
         elif operation == 'generatePass':
-            manager.generatePass()
+            estado = manager.generatePass()
             result = estado['msg']
         elif operation == 'TestCerradura1':
-            manager.testLock()
+            estado = manager.testLock()
             result = estado['msg']
         elif operation == 'TestLuzLed':
             result = manager.testArrow()
@@ -156,7 +156,8 @@ def mecanism_Api():
         if not json_data:
             return jsonify({"error": "No se recibió JSON"}), 400
         if json_data['operation'] == 'read_sensor':
-            result = manager.ReadSensor()
+            state = manager.ReadSensor()
+            result = state['value']
         elif json_data['operation'] == 'read_serial':
             result = rs232.getData()
         elif json_data['operation'] == 'generate_normal_pass':
