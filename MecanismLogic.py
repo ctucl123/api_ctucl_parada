@@ -39,13 +39,8 @@ def _open_turnstile(target_time):
     doors.open_lock()
     audio_manager.open_sound()
     start = time.time()
-
     while time.time() - start < target_time:
-        if doors.read_sensor_45():
-            hold_start = time.time()
-            while doors.read_sensor():
-                if time.time() - hold_start >= target_time or doors.read_sensor():
-                    break
+        if doors.read_sensor():
             break
 
     doors.close_lock()
