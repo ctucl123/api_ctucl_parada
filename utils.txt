@@ -1,0 +1,6 @@
+scp main.py admin@192.168.0.103:/home/admin/api_ctucl_parada
+scp MecanismLogic.py admin@192.168.0.103:/home/admin/api_ctucl_parada
+scp gpiosManagerRaspberry.py admin@192.168.0.103:/home/admin/api_ctucl_parada
+
+scp SqliteManager.py admin@192.168.0.103:/home/admin/api_ctucl_parada/database
+scp rs232.py admin@192.168.0.103:/home/admin/api_ctucl_parada

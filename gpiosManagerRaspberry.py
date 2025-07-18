@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import time
 load_dotenv()
 
-# Detecta entorno desde .env
+# version2
 ENV = os.getenv("TARGET", "PI3")
 
 if ENV == "PI5":
@@ -27,73 +27,88 @@ else:
 class GpiosManager():
     def __init__(self):
         # Pines de salida
-        self.cerradura = DigitalOutputDevice(6)
-        self.electroiman = DigitalOutputDevice(5)
-        self.semaforo = DigitalOutputDevice(27)
-        self.actuador_up = DigitalOutputDevice(21)
-        self.actuador_down = DigitalOutputDevice(20)
-        self.electroiman_especial = DigitalOutputDevice(17)
-        self.pin_libre3 = DigitalOutputDevice(24)
-
-        # Pines de entrada
+        self.lock = DigitalOutputDevice(6)
+        self.arrow_light = DigitalOutputDevice(27)
+        self.actuator_up = DigitalOutputDevice(21)
+        self.actuator_down = DigitalOutputDevice(20)
+        self.special_electromagnet = DigitalOutputDevice(5)
+        # Pines de sensores
         self.sensor_45 = DigitalInputDevice(16, pull_up=True)
         self.sensor = DigitalInputDevice(26, pull_up=True)
-        self.pulsante_1 = DigitalInputDevice(2, pull_up=True)
         #estado inicial de pines
-        self.cerradura.on()
-        self.electroiman.off()
-        self.actuador_up.on()
-        self.actuador_down.on()
-        self.semaforo.on()
-        self.electroiman_especial.off()
-        self.pin_libre3.on()
+        self.lock.on()
+        self.arrow_light.on()
+        self.actuator_up.on()
+        self.actuator_down.on()
+        self.special_electromagnet.on()
+       
 
     def open_lock(self):
-        self.cerradura.off()
-        self.semaforo.off()
-        return "puerta general abierta"
+        try:
+            self.lock.off()
+            self.arrow_light.off()
+            return True
+        except Exception as e:
+            return False
 
     def close_lock(self):
-        self.cerradura.on()
-        self.semaforo.on()
-        return "puerta general bloqueada"
+        try:
+            self.lock.on()
+            self.arrow_light.on()
+            return True
+        except Exception as e:  
+            return False
+
 
     def test_lock(self):
-        self.cerradura.off()
-        time.sleep(1)
-        self.cerradura.on()
-        time.sleep(1)
-        return 'Cerradura 1 testeada con exito'
+        try:
+            self.lock.off()
+            time.sleep(1)
+            self.lock.on()
+            time.sleep(1)
+            return True
+        except Exception as e:
+            return False
 
     def test_arrow(self):
-        self.semaforo.off()
-        time.sleep(1)
-        self.semaforo.on()
-        time.sleep(2)
-        return 'Luz Led testeada con exito'
+        try:
+            self.arrow_light.off()
+            time.sleep(1)
+            self.arrow_light.on()
+            time.sleep(1)
+            return True
+        except Exception as e:  
+            return False
 
     def special_door_open(self):
-        self.electroiman_especial.on()
-        self.actuador_down.on()
-        self.actuador_up.off()
-        self.semaforo.off()
-        return "Puerta especial Abierta"
+        try:
+            self.special_electromagnet.on()
+            self.actuator_down.on()
+            self.actuator_up.off()
+            self.arrow_light.off()
+            return True
+        except Exception as e:
+            return False
 
     def special_door_close(self):
-        self.electroiman_especial.off()
-        self.actuador_up.on()
-        self.actuador_down.off()
-        self.semaforo.on()
-        return "Puerta Especial Cerrada"
+        try:
+            self.special_electromagnet.off()
+            self.actuator_up.on()
+            self.actuator_down.off()
+            self.arrow_light.on()
+            return True
+        except Exception as e:
+            return False
 
     def special_door_off(self):
-        self.actuador_up.on()
-        self.actuador_down.on()
-        self.semaforo.on()
-        return "sistema silla de ruedas apagado"
+        try:
+            self.actuator_down.off()
+            self.actuator_up.off()
+            self.arrow_light.on()
+            return True
+        except Exception as e:
+            return False
 
-    def rebootButton(self):
-        return self.pulsante_1.value == 0
 
     def read_sensor(self):
         return self.sensor.value == 0
