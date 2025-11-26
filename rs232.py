@@ -21,7 +21,11 @@ class rs232Comunication(threading.Thread):
         while not self.stop_event.is_set():
             with self.lock:
                 if self.ser.in_waiting > 0:
-                    linea = self.ser.readline().decode().strip() 
+                    try:
+                        linea = self.ser.readline().decode().strip()
+                    except Exception as e:
+                        print("Error:", e)
+                        
                     if linea:
                         #print(f"Datos crudos recibidos: {linea}")
                         if linea.startswith('$>') and linea.endswith('#'):
