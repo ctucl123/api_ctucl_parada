@@ -21,6 +21,7 @@ class rs232Comunication(threading.Thread):
         while not self.stop_event.is_set():
             with self.lock:
                 if self.ser.in_waiting > 0:
+                    linea = '$>1111111111111111111111111111111111111111111111111111111111111111#'
                     try:
                         linea = self.ser.readline().decode().strip()
                     except Exception as e:
